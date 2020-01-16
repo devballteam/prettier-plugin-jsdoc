@@ -1,0 +1,26 @@
+{
+  "name": "prettier-plugin-jsdoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "prettier",
+    "plugin"
+  ],
+  "author": "gumen",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "prettier-repo": "https://github.com/prettier/prettier.git#1.18.2"
+  },
+  "jest": {
+    "verbose": true,
+    "testMatch": [
+      "**/tests/**/*.js"
+    ]
+  }
+}
