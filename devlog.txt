@@ -76,3 +76,9 @@ Nawet nie mam ochoty zagłębiać się w szczegóły.  Przygotuję kod żeby
 dało się go zastosować na naszych projektach i zamykam temat.  Pewnie
 zejdzie mi na tym jeszcze dużo czasu.  Jak to zwykle bywa ostatnie 20%
 pracy zajmuje najwięcej czasu.
+
+pią, 17 sty 2020, 14:25:57 CET
+
+Dodałem więcej przykładowych JSDocków do testowania parsowania.
+Obsłużyłem dodatkowe przypadki i dodałem opcję pozwalającą zmienić
+ilość spacji oddzielających poszczególne pola.

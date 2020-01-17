@@ -16,7 +16,20 @@ const bar = 2
 block comment
 in multiple lines
 */
+/**
+* @param {String|Null} some name
+* @param {Number|Null} test
+* @returns {Boolean} fe
+*/
 
-     function fun (/* comment inside code */)   {
+       function fun (/* comment inside code */)   {
+/**
+* jsDoc comment 2
+* @param {String|Null} blablabla - testDesc
+* @param {Number|Null} fa - testDesc2
+* @return {Boolean} testDesc2
+*/
+         function fun2 () {
+         }
 return true        // one line comment 2
 }
