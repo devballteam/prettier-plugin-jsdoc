@@ -1,26 +1,11 @@
-const cwd = process.cwd();
-const path = require('path');
-const { parsers } = require('prettier/parser-babylon')
-const printerEstree = require(path.join(cwd, 'node_modules/prettier-repo/src/language-js/printer-estree'))
+const cwd = process.cwd()
+const path = require('path')
 const prettier = require('prettier')
-const {
-  doc: {
-    builders: { concat, join, indent, group, hardline, softline, line }
-  }
-} = prettier
-
-// console.log(printerEstree)
-
-function jsdocPrinter (path, options, print) {
-  const node = path.getValue()
-  console.log('----------- node:', node)
-
-  switch (node.type) {
-  default:
-    return ''
-  }
-}
-
+// const {
+//   doc: {
+//     builders: { concat, join, indent, group, hardline, softline, line }
+//   }
+// } = prettier
 
 // [x] languages
 // [x] parsers
@@ -37,31 +22,36 @@ module.exports = {
     }
   ],
   parsers: {
-    'jsdoc-parser': Object.assign(parsers['babel-flow'], {
+    "jsdoc-parser": {
+      // text: string, parsers: object, options: object
+      parse (text, parsers, options) {
+        const babelFlowAST = parsers['babel-flow'](text, parsers, options)
+
+        babelFlowAST.comments.forEach(comment => {
+          if (comment.type === 'CommentBlock') {
+            console.log('>>>> value', '/*' + comment.value + '*/')
+          }
+        })
+      },
       astFormat: "jsdoc-ast",
-    })
+      // hasPragma, locStart, locEnd, preprocess,
+    }
   },
   printers: {
-    // 'jsdoc-ast': printerEstree
-    'jsdoc-ast': { print: jsdocPrinter }
+    'jsdoc-ast': {
+      // preprocess,
+      print (path, options, print) {
+        const node = path.getValue()
+        console.log('----------- node:', node)
+
+        switch (node.type) {
+        default:
+          return ''
+        }
+      },
+      // embed, insertPragma, massageAstNode, hasPrettierIgnore, willPrintOwnComments, canAttachComment, printComment, isBlockComment,
+      // handleComments: { ownLine, endOfLine, remaining }
+    }
   }
 }
-
-// var printerEstree = {
-//   preprocess: preprocess_1$2,
-//   print: genericPrint$3,
-//   embed: embed_1$2,
-//   insertPragma: insertPragma$7,
-//   massageAstNode: clean_1$2,
-//   hasPrettierIgnore: hasPrettierIgnore$2,
-//   willPrintOwnComments: willPrintOwnComments,
-//   canAttachComment: canAttachComment$1,
-//   printComment: printComment$2,
-//   isBlockComment: comments$3.isBlockComment,
-//   handleComments: {
-//     ownLine: comments$3.handleOwnLineComment,
-//     endOfLine: comments$3.handleEndOfLineComment,
-//     remaining: comments$3.handleRemainingComment
-//   }
-// };
 

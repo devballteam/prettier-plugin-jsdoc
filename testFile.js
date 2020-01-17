@@ -7,6 +7,8 @@ const bar = 2
  * jsDoc comment
  */
 
+/** jsDoc comment 2 */
+
 /* block comment in one line */
 
 /*

@@ -7,7 +7,7 @@ okiem na dokumentację zanim cokolwiek zrobię.
 
 Pierwszym krokiem będzie przechwycenie momentu, w którym Prettier
 parsuje zawartość pliku na AST.  W tym miejscu będę musiał wychwycić
-JSDoc'ki i też je parsować.
+JSDocki i też je parsować.
 
 pią, 17 sty 2020, 09:49:49 CET
 
@@ -22,8 +22,31 @@ funkcję wypisującą kod zamiast pisać całej nowej.  Niestety nie widzę
 ku temu sposobności.
 
 Rozważam teraz możliwość napisania parsera i printera do samych
-JSDoc'ków.  Można by wtedy uruchamiać prettiera dwa razy.  Za
-pierwszym razem dla samego kodu JS, za drugim dla JSDoc'ków.
+JSDocków.  Można by wtedy uruchamiać prettiera dwa razy.  Za pierwszym
+razem dla samego kodu JS, za drugim dla JSDocków.
 
 Nie podoba mi się takie podejście.  Przechodzenie przez te same pliki
 kilka razy jest niewydajne.
+
+pią, 17 sty 2020, 10:16:38 CET
+
+Postanowione.  Napiszę parser do samych JSDocków.  Przynajmniej będę
+miał całą logikę odpowiedzialną za parsowanie i formatowanie.  Sprawy
+związane z konstruowaniem dodatku do Prettiera pozostawię na koniec.
+
+Coś czuję, że wystarczające okaże się podanie kilku parserów w kodzie
+definiującym język.
+
+pią, 17 sty 2020, 10:56:15 CET
+
+Wygląda na to, że można bez przeszkód używać innego parsera wewnątrz
+swojego parsera.  Tak uczyniłem i w efekcie dostaję sparsowany kod JS
+z wycielonymi komentarzami.  Mogę teraz przejść przez same komentarze
+i dodatkowo je parsować.  Pewnie podobnie będzie dało się zrobić
+podczas printowania.
+
+                                * * *
+
+Pobrałem repozytorium JSDocka z zamiarem wykorzystania jego własnego
+kodu do pluginu parsera.  Przeglądanie innego projektu poszukując
+potrzebnych funkcji zabiera cenny czas.
