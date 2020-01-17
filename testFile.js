@@ -25,6 +25,8 @@ in multiple lines
        function fun (/* comment inside code */)   {
 /**
 * jsDoc comment 2
+*       second description line
+*         another line
 * @param {String|Null} blablabla - testDesc
 * @param {Number|Null} fa - testDesc2
 * @return {Boolean} testDesc2

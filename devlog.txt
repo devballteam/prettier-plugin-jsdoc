@@ -82,3 +82,11 @@ pią, 17 sty 2020, 14:25:57 CET
 Dodałem więcej przykładowych JSDocków do testowania parsowania.
 Obsłużyłem dodatkowe przypadki i dodałem opcję pozwalającą zmienić
 ilość spacji oddzielających poszczególne pola.
+
+pią, 17 sty 2020, 14:32:14 CET
+
+Mam chyba już wszystko co chciałem.  Spodziewam się, że nadal jest coś
+o czym zapomniałem.  Najlepszym testem będzie użycie kodu na żywym
+organizmie.  Przygotuję kod du użytku publicznego i przystąpię do
+wdrażania jej na jeden z naszych projektów co powinno zweryfikować
+poprawność parsowania i printowania.
