@@ -11,9 +11,9 @@ const {
 
 // console.log(printerEstree)
 
-function print(path, options, print) {
+function jsdocPrinter (path, options, print) {
   const node = path.getValue()
-  // console.log('----------- node:', node)
+  console.log('----------- node:', node)
 
   switch (node.type) {
   default:
@@ -21,11 +21,18 @@ function print(path, options, print) {
   }
 }
 
+
+// [x] languages
+// [x] parsers
+// [x] printers
+// [ ] options
+// [ ] defaultOptions
+
 module.exports = {
   languages: [
     {
-      extensions: ['.js'],
       name: 'jsdoc',
+      extensions: ['.js'],
       parsers: ['jsdoc-parser']
     }
   ],
@@ -35,6 +42,26 @@ module.exports = {
     })
   },
   printers: {
-    'jsdoc-ast': printerEstree
+    // 'jsdoc-ast': printerEstree
+    'jsdoc-ast': { print: jsdocPrinter }
   }
 }
+
+// var printerEstree = {
+//   preprocess: preprocess_1$2,
+//   print: genericPrint$3,
+//   embed: embed_1$2,
+//   insertPragma: insertPragma$7,
+//   massageAstNode: clean_1$2,
+//   hasPrettierIgnore: hasPrettierIgnore$2,
+//   willPrintOwnComments: willPrintOwnComments,
+//   canAttachComment: canAttachComment$1,
+//   printComment: printComment$2,
+//   isBlockComment: comments$3.isBlockComment,
+//   handleComments: {
+//     ownLine: comments$3.handleOwnLineComment,
+//     endOfLine: comments$3.handleEndOfLineComment,
+//     remaining: comments$3.handleRemainingComment
+//   }
+// };
+

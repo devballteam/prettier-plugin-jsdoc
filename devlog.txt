@@ -1,0 +1,29 @@
+pią, 17 sty 2020, 09:08:51 CET
+
+Jak ja się w to wpakowałem ...  Mniejsza o to.  Mam tutaj stary kod.
+Już kiedyś próbowałem dodać plugin do Prettiera.  Mam nadzieję, że od
+tamtej pory nic się nie zmieniło w samej mechanice pluginów.  Rzucę
+okiem na dokumentację zanim cokolwiek zrobię.
+
+Pierwszym krokiem będzie przechwycenie momentu, w którym Prettier
+parsuje zawartość pliku na AST.  W tym miejscu będę musiał wychwycić
+JSDoc'ki i też je parsować.
+
+pią, 17 sty 2020, 09:49:49 CET
+
+Zapoznałem się z kodem, dokumentacją i teraz już pamiętam w czym tkwił
+problem.  Sytuacja jest skomplikowana i moje wnioski mogą mijać się
+z prawdą, ale wygląda na to, że nie da się rozszerzyć istniejącego
+parsera.  Można tylko napisać nowy co jest idealne kiedy chcemy dodać
+wsparcie dla całego innego języka, ale nie w moim przypadku.
+
+Podobna sytuacje z printerem.  Tutaj też chcę tylko zmodyfikować
+funkcję wypisującą kod zamiast pisać całej nowej.  Niestety nie widzę
+ku temu sposobności.
+
+Rozważam teraz możliwość napisania parsera i printera do samych
+JSDoc'ków.  Można by wtedy uruchamiać prettiera dwa razy.  Za
+pierwszym razem dla samego kodu JS, za drugim dla JSDoc'ków.
+
+Nie podoba mi się takie podejście.  Przechodzenie przez te same pliki
+kilka razy jest niewydajne.
