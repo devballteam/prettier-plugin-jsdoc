@@ -50,3 +50,29 @@ podczas printowania.
 Pobrałem repozytorium JSDocka z zamiarem wykorzystania jego własnego
 kodu do pluginu parsera.  Przeglądanie innego projektu poszukując
 potrzebnych funkcji zabiera cenny czas.
+
+pią, 17 sty 2020, 11:47:51 CET
+
+Zdaje się, że znalazłem główną funkcję parsującą pliki w kodzie
+JSDoc.  Zamierzam ją bezwzględnie wykorzystać.  Pierwsze czego mi
+trzeba to funkcji znajdującej JSDocki.
+
+pią, 17 sty 2020, 12:50:13 CET
+
+Niestety JSDoc nie jest napisany jak biblioteka i używanie funkcji
+bezpośrednio z jego kodu jest uniemożliwione.  Istnieją różne inne
+parsery JSDocków.  Sam swojego nie napiszę w tak krótkim czasie więc
+muszę z któregoś skorzystać.
+
+pią, 17 sty 2020, 13:12:37 CET
+
+Eh, nie wiem czy się cieszyć czy smucić.  Zrobiłem to.  Działa.
+Praktycznie większość tego co chciałem już jest.  Okazało się, że da
+się podejść do problemu w niespotykanie prosty sposób bez pisania
+dodatku do Prettiera.  Wystarczyła jedna funkcja, która ma około 16
+linii kodu.
+
+Nawet nie mam ochoty zagłębiać się w szczegóły.  Przygotuję kod żeby
+dało się go zastosować na naszych projektach i zamykam temat.  Pewnie
+zejdzie mi na tym jeszcze dużo czasu.  Jak to zwykle bywa ostatnie 20%
+pracy zajmuje najwięcej czasu.

@@ -1,10 +1,11 @@
-const foo = 1
+let foo = 1
 const bar = 2
 
 // one line comment
 
 /**
  * jsDoc comment
+ * @param {String} test - test description
  */
 
 /** jsDoc comment 2 */
@@ -16,6 +17,6 @@ block comment
 in multiple lines
 */
 
-     function foo (/* comment inside code */)   {
+     function fun (/* comment inside code */)   {
 return true        // one line comment 2
 }
