@@ -54,9 +54,10 @@ module.exports = function jsdocParser(text, parsers, options) {
       tag.title = tag.title.toLowerCase()
 
       if (tag.title === 'returns') tag.title = 'return'
-      if (tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
+      if (tag.type && tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
 
-      const parts = [`* @${tag.title}`, `{${tag.type.name}}`]
+      const parts = [`* @${tag.title}`]
+      if (tag.type) parts.push(`{${tag.type.name}}`)
       if (tag.title !== 'return') parts.push(tag.name || 'TODO')
       parts.push(formatDescription(tag.description))
 

@@ -90,3 +90,12 @@ o czym zapomniałem.  Najlepszym testem będzie użycie kodu na żywym
 organizmie.  Przygotuję kod du użytku publicznego i przystąpię do
 wdrażania jej na jeden z naszych projektów co powinno zweryfikować
 poprawność parsowania i printowania.
+
+pią, 17 sty 2020, 15:06:04 CET
+
+Dodałem parser do naszego głównego projektu.  Odpaliłem.  Dwa razy
+wyskoczyły błędy, ale szybko się z nimi uporałem.  Przeszło przez
+wszystkie pliki dość szybko.  Patrzę teraz na diffa.  Niestety są
+drobne problemy.  Spodziewałem się tego.
+
+Widzę, że jest problem z @description i kolejnością innych tagów.
