@@ -99,3 +99,20 @@ wszystkie pliki dość szybko.  Patrzę teraz na diffa.  Niestety są
 drobne problemy.  Spodziewałem się tego.
 
 Widzę, że jest problem z @description i kolejnością innych tagów.
+
+pią, 17 sty 2020, 15:42:29 CET
+
+@description może występować w formie tagu i w formie zwykłego
+tekstu.  Będę faworyzował wersję z tagiem, ale to akurat mniejszy
+problem.  Najważniejsze jest ustalenie kolejności i to na tym się
+teraz skupię.
+
+pią, 17 sty 2020, 16:30:56 CET
+
+Jest nieźle.  Pozostało lepsze obsłużenie tagu @example i dodawanie
+pustej linii po @description.  Jeszcze z jakiegoś powodu nie działają
+ustawienia parsera.  To jest bardzo dziwne.
+
+Mimo wszystko kończę na dzisiaj.  Nie ma sensu siedzieć 24h bo pod
+wpływem zmęczenia napiszę kod, który będzie potem do przepisania.
+Lepiej na spokojnie w weekend trochę jeszcze popracować.

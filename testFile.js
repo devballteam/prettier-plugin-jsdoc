@@ -24,12 +24,16 @@ in multiple lines
 
        function fun (/* comment inside code */)   {
 /**
-* jsDoc comment 2
-*       second description line
-*         another line
-* @param {String|Null} blablabla - testDesc
-* @param {Number|Null} fa - testDesc2
-* @return {Boolean} testDesc2
+* another description
+ * @description  Check if target contains value
+ * @return  {Boolean}               True if found
+* @private
+ * @examples
+ *   {{ 'Example string' | includes('ple') }} => true
+ *   {{ ['foo', 'bar', 'baz'] | includes('boz') }} => false
+ * @param   {String|Array}  target  Source
+ * @param   {String}        value   Value you are looking for
+ * @memberof  nunjucksEnv
 */
          function fun2 () {
          }

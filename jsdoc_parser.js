@@ -32,6 +32,19 @@ module.exports = function jsdocParser(text, parsers, options) {
     return textsList.join(' '.repeat(options.jsdoc.spaces)) + '\n'
   }
 
+  function getTagOrderWeight(tagTitle) {
+    var weightsMap = {
+      'private': 1,
+      'memberof': 2,
+      'description': 3,
+      'examples': 4,
+      // Evertthing else will have 5
+      'param': 6,
+      'return': 7,
+    }
+    return weightsMap[tagTitle.trim().toLowerCase()] || 5
+  }
+
   ast.comments.forEach(comment => {
     // Parse only comment blocks
     if (comment.type !== 'CommentBlock') return
@@ -45,24 +58,36 @@ module.exports = function jsdocParser(text, parsers, options) {
     const parsed = doctrine.parse(commentString, { unwrap: true, sloppy: true })
 
     comment.value = '*\n'
-    comment.value += formatLine(['* @description',  formatDescription(parsed.description)])
 
-    // Add empty line before tags
-    if (parsed.tags.length) comment.value += '*\n'
+    if (parsed.description && !parsed.tags.find(t => t.title.toLowerCase() === 'description'))
+      parsed.tags.push({ title: 'description', description: parsed.description })
 
-    parsed.tags.forEach(tag => {
-      tag.title = tag.title.toLowerCase()
+    parsed.tags
+      .sort((a, b) => getTagOrderWeight(a.title) - getTagOrderWeight(b.title))
+      .forEach((tag, tagIndex) => {
+        tag.title = tag.title.toLowerCase()
 
-      if (tag.title === 'returns') tag.title = 'return'
-      if (tag.type && tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
+        if (tag.title === 'returns') tag.title = 'return'
+        if (tag.title === 'examples') tag.title = 'example'
+        if (tag.type && tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
 
-      const parts = [`* @${tag.title}`]
-      if (tag.type) parts.push(`{${tag.type.name}}`)
-      if (tag.title !== 'return') parts.push(tag.name || 'TODO')
-      parts.push(formatDescription(tag.description))
+        const parts = [`* @${tag.title}`]
+        if (tag.type) parts.push(`{${tag.type.name}}`)
+        if (tag.name) parts.push(tag.name)
 
-      comment.value += formatLine(parts)
-    })
+        // Warning!  Special case for @example
+        if (tag.title === 'example') {
+          parts[parts.length - 1] += `\n*\n${tag.description}\n*\n` // TODO WIP
+        } else {
+          parts.push(formatDescription(tag.description))
+        }
+
+        comment.value += formatLine(parts)
+
+        // TODO Broken
+        // Add empty line after description if there is something below
+        if (tag.title === 'description' && tagIndex === parsed.tags.length - 1) comment.value += '*\n'
+      })
 
     // comment.value is an end product of this whole operation
   })
