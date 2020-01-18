@@ -16,7 +16,7 @@ module.exports = function jsdocParser(text, parsers, options) {
   function formatDescription(text) {
     text = text ? text.trim() : ''
     if (!text) return 'TODO'
-    text = text.replace(/\s\s+/g, ' ')             // Avoid multiple spaces and \n
+    text = text.replace(/\s\s+/g, ' ')             // Replace white characters with spaces
     text = text[0].toUpperCase() + text.slice(1)   // Capitalize
     if (text[text.length - 1] !== '.') text += '.' // End with dot
     return text || 'TODO'
@@ -40,6 +40,10 @@ module.exports = function jsdocParser(text, parsers, options) {
       'examples': 4,
       // Evertthing else will have 5
       'param': 6,
+      // TODO Handle aliases like returns, examples etc.  Maybe I
+      //      should prepare all titles before processing them.  Make
+      //      them all lowercase, trim and avoid alliases.
+      'returns': 7,
       'return': 7,
     }
     return weightsMap[tagTitle.trim().toLowerCase()] || 5

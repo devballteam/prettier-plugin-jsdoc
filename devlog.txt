@@ -116,3 +116,15 @@ ustawienia parsera.  To jest bardzo dziwne.
 Mimo wszystko kończę na dzisiaj.  Nie ma sensu siedzieć 24h bo pod
 wpływem zmęczenia napiszę kod, który będzie potem do przepisania.
 Lepiej na spokojnie w weekend trochę jeszcze popracować.
+
+sob, 18 sty 2020, 06:53:12 CET
+
+Nadszedł czas pisania testów.  Jestem na etapie, w którym dodaję
+wsparcie dla różnych specyficznych przypadków i planuję przepisać
+część kodu.  Dlatego zanim cokolwiek dotknę chce dodać unit testy.
+
+sob, 18 sty 2020, 07:27:03 CET
+
+Mam pierwsze testy.  Już znalazłem kilka dodatkowych przypadków do
+pokrycia.  Będzie tak jak pisałem wczoraj "ostatnie 20% pracy zajmuje
+najwięcej czasu".
