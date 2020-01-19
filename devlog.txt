@@ -163,3 +163,31 @@ Potrzebne jest tylko odpowiednie wyrażenie regularne i oryginalny
 string  komentarza.
 
 https://www.xkcd.com/208/
+
+nie, 19 sty 2020, 14:48:09 CET
+
+Dobra.  Czyli mam cztery tematy na talerzu.  Patrzę na te wszystkie
+smakowite kąski i nie wiem od którego zacząć.  Naprawienie opcji
+definiowania ilości spacji, zawijanie wierszy długich opisów, opis dla
+tagu @examples czy brakujące wartości domyślne.
+
+                                * * *
+
+Zdecydowałem, że zacznę od przystawki, czyli zawijania wierszy.  Jest
+to coś co i tak bardzo chcę żeby działało.  Trochę ciężka sprawa, ale
+do zrobienia bo nie potrzebuję żadnych dodatkowych składników.
+
+No więc tego, smacznego.
+
+nie, 19 sty 2020, 15:28:41 CET
+
+Dobra ta przystawka, ale jeszcze całej nie zjadłem.
+
+nie, 19 sty 2020, 16:18:09 CET
+
+Wygląda na to, że zawijanie wierszy w opisach wszystkich tagów (po za
+@example bo tam tego nie chcemy) działa wyśmienicie.
+
+Teraz biorę się za opis z @example.  To może być ciężkie ("Macie
+problemy z grawitacją?").  Spróbuję po prostu użyć do tego prettiera.
+Powinno się udać.

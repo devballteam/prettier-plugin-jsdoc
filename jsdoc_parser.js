@@ -1,5 +1,8 @@
 const doctrine = require('doctrine')
 
+// TODO This also could be taken from options.
+const printWidth = 80
+
 const tagSynonyms = {
   // One TAG TYPE can have different titles called SYNONYMS.  We want
   // to avoid different titles in the same tag so here is map with
@@ -45,7 +48,7 @@ function formatDescription(text) {
   text = text ? text.trim() : ''
   if (!text) return ''
   text = text.replace(/\s\s+/g, ' ')             // Avoid multiple spaces
-  text = text.replace('\n', ' ')                 // Make single line
+  text = text.replace(/\n/g, ' ')                // Make single line
   text = text[0].toUpperCase() + text.slice(1)   // Capitalize
   if (text[text.length - 1] !== '.') text += '.' // End with dot
   return text || ''
@@ -97,8 +100,8 @@ module.exports = function jsdocParser(text, parsers, options) {
         tag.title = tag.title.trim().toLowerCase()
         tag.title = tagSynonyms[tag.title] || tag.title
 
-        // TODO check how types are parsed if default value is passed
         if (tag.type) {
+          // Figure out tag.type.name
           if (!tag.type.name) {
             if (tag.type.expression) {
               tag.type.name = tag.type.expression.name
@@ -106,7 +109,12 @@ module.exports = function jsdocParser(text, parsers, options) {
             }
             if (tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
           }
+
+          // Figure out tag.name if necessary
           if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
+          // TODO At this point I should RegExp the hell out of
+          // original string to find out if there is a default value
+          // in tag.name.
         }
 
         if (tag.title !== 'example') tag.description = formatDescription(tag.description)
@@ -120,24 +128,41 @@ module.exports = function jsdocParser(text, parsers, options) {
 
       // Create final jsDoc string
       .forEach((tag, tagIndex) => {
-        comment.value += ` * @${tag.title}`
+        let tagString = ` * @${tag.title}`
 
-        if (tag.type && tag.type.name) comment.value += gap + `{${tag.type.name}}`
-        if (tag.name) comment.value += gap + tag.name
-        // TODO Wrap long description lines.  This might be tricky.
-        if (tag.description && tag.title !== 'example') comment.value += gap + tag.description
+        if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
+        if (tag.name) tagString += gap + tag.name
 
-        comment.value += '\n'
+        // Add description.  Its complicated because of text wrap.
+        if (tag.description && tag.title !== 'example') {
+          tagString += gap
+          const marginLength = tagString.length
+          let description = tagString + tag.description
+          tagString =''
+
+          while (description.length > printWidth) {
+            const sliceIndex = description.lastIndexOf(' ', printWidth)
+            tagString += description.slice(0, sliceIndex)
+            description = description.slice(sliceIndex + 1, description.length)
+            description = '\n *' + ' '.repeat(marginLength - 2) + description
+          }
+
+          if (description.length > marginLength) tagString += description
+        }
 
         // Handle @example tag description in special way
         if (tag.title === 'example') {
           // console.log('>>>> example tag.description', tag.description)
-          comment.value += `${tag.description}\n` // TODO WIP
+          tagString += `${tag.description}\n` // TODO WIP
         }
+
+        tagString += '\n'
 
         // Add empty line after @description or @example if there is something below
         if (['description', 'example'].includes(tag.title) && tagIndex !== parsed.tags.length - 1)
-          comment.value += ' *\n'
+          tagString += ' *\n'
+
+        comment.value += tagString
       })
 
     comment.value += ' '

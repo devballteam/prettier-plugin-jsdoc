@@ -39,8 +39,11 @@ test('Should format regular jsDoc', () => {
 /**
 * function example description that was wrapped by hand
 * so it have more then one line and don't end with a dot
+* REPEATED TWO TIMES BECAUSE IT WAS EASIER to copy
+* function example description that was wrapped by hand
+* so it have more then one line and don't end with a dot
 * @returns {Boolean} Description for @return with s
-* @param {String|Number} text - some text description
+* @param {String|Number} text - some text description that is very long and needs to be wrapped
 * @param {String} [defaultValue="defaultTest"] TODO
 * @arg {Number|Null} [optionalNumber]
 * @private
@@ -53,20 +56,26 @@ const testFunction = (text, defaultValue, optionalNumber) => true
 
   const expected = `/**
  * @private
- * @description Function example description that was wrapped by hand so it have more then one line and don't end with a dot.
+ * @description Function example description that was wrapped by hand so it have
+ *              more then one line and don't end with a dot REPEATED TWO TIMES
+ *              BECAUSE IT WAS EASIER to copy function example description that
+ *              was wrapped by hand so it have more then one line and don't end
+ *              with a dot.
  *
  * @example
 var one = 5
   var two = 10
  *
- * @param {String|Number} text Some text description.
- * @param {String} [defaultValue="defaultTest"] TODO.
+ * @param {String|Number} text Some text description that is very long and needs
+ *                             to be wrapped.
+ * @param {String} [defaultValue] TODO.
  * @param {Number|Null} [optionalNumber] TODO.
  * @return {Boolean} Description for @return with s.
  */
 const testFunction = (text, defaultValue, optionalNumber) => true;
 `
 
+  console.log('>>>> result', result)
   expect(result).toEqual(expected)
 })
 
