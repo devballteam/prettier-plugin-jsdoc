@@ -13,8 +13,7 @@
   "author": "gumen",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^24.9.0",
-    "prettier": "^1.18.2"
+    "jest": "^24.9.0"
   },
   "jest": {
     "verbose": true,
@@ -23,6 +22,7 @@
     ]
   },
   "dependencies": {
+    "prettier": "^1.18.2",
     "doctrine": "^3.0.0"
   }
 }

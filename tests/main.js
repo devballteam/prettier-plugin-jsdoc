@@ -50,6 +50,8 @@ test('Should format regular jsDoc', () => {
 * @examples
 *   var one = 5
 *   var two = 10
+*
+*   if(one > 2) { two += one }
 */
 const testFunction = (text, defaultValue, optionalNumber) => true
 `)
@@ -63,8 +65,12 @@ const testFunction = (text, defaultValue, optionalNumber) => true
  *              with a dot.
  *
  * @example
-var one = 5
-  var two = 10
+ *  var one = 5;
+ *  var two = 10;
+ *
+ *  if (one > 2) {
+ *    two += one;
+ *  }
  *
  * @param {String|Number} text Some text description that is very long and needs
  *                             to be wrapped.
@@ -75,8 +81,7 @@ var one = 5
 const testFunction = (text, defaultValue, optionalNumber) => true;
 `
 
-  console.log('>>>> result', result)
-  expect(result).toEqual(expected)
+   expect(result).toEqual(expected)
 })
 
 test('Should add empty line after @description and @example description if necessary', () => {
@@ -93,7 +98,6 @@ test('Should add empty line after @description and @example description if neces
  * @description Single line description.
  *
  * @example
-TODO.
  */
 `
 
@@ -106,7 +110,6 @@ TODO.
  * @description Single line description.
  *
  * @example
-TODO.
  *
  * @return {Boolean} Always true.
  */

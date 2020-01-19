@@ -1,4 +1,5 @@
 const doctrine = require('doctrine')
+const prettier = require('prettier')
 
 // TODO This also could be taken from options.
 const printWidth = 80
@@ -118,7 +119,7 @@ module.exports = function jsdocParser(text, parsers, options) {
         }
 
         if (tag.title !== 'example') tag.description = formatDescription(tag.description)
-        if (!tag.description && tag.title !== 'private') tag.description = 'TODO.'
+        if (!tag.description && !['example', 'private'].includes(tag.title)) tag.description = 'TODO.'
 
         return tag
       })
@@ -133,12 +134,12 @@ module.exports = function jsdocParser(text, parsers, options) {
         if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
         if (tag.name) tagString += gap + tag.name
 
-        // Add description.  Its complicated because of text wrap.
+        // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
           tagString += gap
           const marginLength = tagString.length
           let description = tagString + tag.description
-          tagString =''
+          tagString = ''
 
           while (description.length > printWidth) {
             const sliceIndex = description.lastIndexOf(' ', printWidth)
@@ -150,10 +151,10 @@ module.exports = function jsdocParser(text, parsers, options) {
           if (description.length > marginLength) tagString += description
         }
 
-        // Handle @example tag description in special way
+        // Use prettier on @example tag description
         if (tag.title === 'example') {
-          // console.log('>>>> example tag.description', tag.description)
-          tagString += `${tag.description}\n` // TODO WIP
+          tagString += prettier.format(tag.description, options).replace(/(^|\n)/g, '\n *  ')
+          tagString = tagString.slice(0, tagString.length - 5)
         }
 
         tagString += '\n'

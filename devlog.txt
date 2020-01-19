@@ -22,7 +22,7 @@ funkcję wypisującą kod zamiast pisać całej nowej.  Niestety nie widzę
 ku temu sposobności.
 
 Rozważam teraz możliwość napisania parsera i printera do samych
-JSDocków.  Można by wtedy uruchamiać prettiera dwa razy.  Za pierwszym
+JSDocków.  Można by wtedy uruchamiać Prettiera dwa razy.  Za pierwszym
 razem dla samego kodu JS, za drugim dla JSDocków.
 
 Nie podoba mi się takie podejście.  Przechodzenie przez te same pliki
@@ -146,7 +146,7 @@ zawijać.  To jeszcze da się zrobić.
 
 Drugi problem to opis tagu @example.  Parser usuwa białe znaki
 pierwszej linii opisu przez co dodany do @example kod może mieć złe
-wcięcia.  Na to też widzę rozwiązanie.  Może uda się użyć prettiera na
+wcięcia.  Na to też widzę rozwiązanie.  Może uda się użyć Prettiera na
 samym opisie tego tagu.  To byłoby super.
 
 Ostatni problem jest niestety nie do przejścia.  Parser nie
@@ -189,5 +189,14 @@ Wygląda na to, że zawijanie wierszy w opisach wszystkich tagów (po za
 @example bo tam tego nie chcemy) działa wyśmienicie.
 
 Teraz biorę się za opis z @example.  To może być ciężkie ("Macie
-problemy z grawitacją?").  Spróbuję po prostu użyć do tego prettiera.
+problemy z grawitacją?").  Spróbuję po prostu użyć do tego Prettiera.
 Powinno się udać.
+
+nie, 19 sty 2020, 16:36:07 CET
+
+Działa!  Przynajmniej w testach.  Nie mogę się doczekać aż uruchomię
+to na jednym z projektów w pracy.
+
+Zostało obsłużenie wartości domyślnych i opcji.  Nie ukrywam, że jak
+to zrobię to chciałbym jeszcze spróbować zamienić to w plugin.  Tak
+będzie łatwiej wspierać Prettiera w edytorach tekstowych.
