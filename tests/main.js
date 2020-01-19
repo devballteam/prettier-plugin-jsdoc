@@ -34,33 +34,76 @@ const someLongList = [
   expect(result).toEqual(expected)
 })
 
-test('Should format jsDoc', () => {
-  const result1 = subject(`
+test('Should format regular jsDoc', () => {
+  const result = subject(`
 /**
 * function example description that was wrapped by hand
 * so it have more then one line and don't end with a dot
 * @returns {Boolean} Description for @return with s
-* @param {String} text - some text description
-* @param {Number|Null} [optionalNumber]
+* @param {String|Number} text - some text description
+* @arg {Number|Null} [optionalNumber]
 * @private
+* @examples
+*   var one = 5
+*   var two = 10
 */
 const testFunction = (text, optionalNumber) => true
 `)
 
-  // TODO check what's wrong with wrapping long desciption text
-  // TODO @private should don't have TODO description
-  const expected1 = `/**
-* @private TODO
-* @description Function example description that was wrapped by hand
-so it have more then one line and don't end with a dot.
-* @param {String} text Some text description.
-* @param {undefined} optionalNumber TODO
-* @return {Boolean} Description for @return with s.
-*/
+  const expected = `/**
+ * @private
+ * @description Function example description that was wrapped by hand so it have more then one line and don't end with a dot.
+ *
+ * @example
+var one = 5
+  var two = 10
+ *
+ * @param {String|Number} text Some text description.
+ * @param {Number|Null} [optionalNumber] TODO
+ * @return {Boolean} Description for @return with s.
+ */
 const testFunction = (text, optionalNumber) => true;
 `
 
-  expect(result1).toEqual(expected1)
+  expect(result).toEqual(expected)
+})
+
+test('Should add empty line after @description and @example description if necessary', () => {
+  const Result1 = subject(`/** single line description*/`)
+  const Expected1 = `/**
+ * @description Single line description.
+ */
+`
+  const Result2 = subject(`/**
+ * single line description
+ * @example
+ */`)
+  const Expected2 = `/**
+ * @description Single line description.
+ *
+ * @example
+TODO
+ */
+`
+
+  const Result3 = subject(`/**
+ * single line description
+ * @returns {Boolean} Always true
+ * @example
+ */`)
+  const Expected3 = `/**
+ * @description Single line description.
+ *
+ * @example
+TODO
+ *
+ * @return {Boolean} Always true.
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+  expect(Result3).toEqual(Expected3)
 })
 
 test.todo('spaces option')

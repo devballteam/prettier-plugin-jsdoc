@@ -128,3 +128,9 @@ sob, 18 sty 2020, 07:27:03 CET
 Mam pierwsze testy.  Już znalazłem kilka dodatkowych przypadków do
 pokrycia.  Będzie tak jak pisałem wczoraj "ostatnie 20% pracy zajmuje
 najwięcej czasu".
+
+sob, 18 sty 2020, 21:03:13 CET
+
+Testy bardo pomagają w pracy.  Dodałem kilka usprawnień.  Między
+innymi obsługę synonimów tagów.  To jeszcze nie koniec.  Kilka tagów
+nadal wymaga specjalnego traktowania.
