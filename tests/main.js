@@ -84,6 +84,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true;
 `
 
   expect(result).toEqual(expected)
+  expect(subject(result)).toEqual(expected)
 })
 
 test('Should add empty line after @description and @example description if necessary', () => {

@@ -2,6 +2,7 @@ const doctrine = require('doctrine')
 const prettier = require('prettier')
 
 // TODO This also could be taken from options.
+// TODO Check what happen when marginLength is longer then printWidth.
 const printWidth = 80
 
 const tagSynonyms = {
