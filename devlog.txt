@@ -154,3 +154,12 @@ interpretuje domyślnych wartości parametrów funkcji.  Po prostu ich
 nie ma.  Szukanie teraz innego parsera może się okazać zgubne.  Pewnie
 każdy z nich posiada jakieś wady.  Mimo to poszukam bo tego problemu
 nie przeskoczę jeśli informacja się traci.
+
+nie, 19 sty 2020, 10:28:04 CET
+
+Ok sytuacja może nie być aż tak beznadziejna jak mi się wydawało.
+Powinienem być w stanie sam wydobyć wartość domyślną parametru.
+Potrzebne jest tylko odpowiednie wyrażenie regularne i oryginalny
+string  komentarza.
+
+https://www.xkcd.com/208/
