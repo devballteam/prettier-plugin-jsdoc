@@ -209,3 +209,9 @@ dopiero na większym projekcie pełnym JSDocków.
 
 Teraz obsługa opcji a na deser zamienię to wszystko w plugin.  Taką
 mam nadzieję.
+
+nie, 19 sty 2020, 19:20:32 CET
+
+Kończą mi się siły.  Naprawiłem jeszcze drobne błędy i dodałem
+brakującą dokumentację do jednej funkcji.  Chyba na dzisiaj
+wystarczy.  Będzie łatwiej w pracy ogarnąć te opcje i plugin.

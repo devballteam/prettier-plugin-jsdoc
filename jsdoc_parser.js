@@ -55,6 +55,11 @@ function formatDescription(text) {
   return text || ''
 }
 
+/**
+ * Control order of tags by weights.  Smaller value brings tag higher.
+ * @param {String} tagTitle
+ * @return {Number} Tag weight
+ */
 function getTagOrderWeight(tagTitle) {
   var tagsWeightMap = {
     'private'     : 1,
@@ -125,7 +130,7 @@ module.exports = function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (tag.title !== 'example') tag.description = formatDescription(tag.description)
+        if (!['example', 'memberof'].includes(tag.title)) tag.description = formatDescription(tag.description)
         if (!tag.description && !['example', 'private'].includes(tag.title)) tag.description = 'TODO.'
 
         return tag

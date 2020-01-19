@@ -47,6 +47,7 @@ test('Should format regular jsDoc', () => {
 * @param {String} [defaultValue="defaultTest"] TODO
 * @arg {Number|Null} [optionalNumber]
 * @private
+*@memberof test
 * @examples
 *   var one = 5
 *   var two = 10
@@ -58,6 +59,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true
 
   const expected = `/**
  * @private
+ * @memberof test
  * @description Function example description that was wrapped by hand so it have
  *              more then one line and don't end with a dot REPEATED TWO TIMES
  *              BECAUSE IT WAS EASIER to copy function example description that
@@ -81,7 +83,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true
 const testFunction = (text, defaultValue, optionalNumber) => true;
 `
 
-   expect(result).toEqual(expected)
+  expect(result).toEqual(expected)
 })
 
 test('Should add empty line after @description and @example description if necessary', () => {
