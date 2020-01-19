@@ -41,13 +41,14 @@ test('Should format regular jsDoc', () => {
 * so it have more then one line and don't end with a dot
 * @returns {Boolean} Description for @return with s
 * @param {String|Number} text - some text description
+* @param {String} [defaultValue="defaultTest"] TODO
 * @arg {Number|Null} [optionalNumber]
 * @private
 * @examples
 *   var one = 5
 *   var two = 10
 */
-const testFunction = (text, optionalNumber) => true
+const testFunction = (text, defaultValue, optionalNumber) => true
 `)
 
   const expected = `/**
@@ -59,10 +60,11 @@ var one = 5
   var two = 10
  *
  * @param {String|Number} text Some text description.
- * @param {Number|Null} [optionalNumber] TODO
+ * @param {String} [defaultValue="defaultTest"] TODO.
+ * @param {Number|Null} [optionalNumber] TODO.
  * @return {Boolean} Description for @return with s.
  */
-const testFunction = (text, optionalNumber) => true;
+const testFunction = (text, defaultValue, optionalNumber) => true;
 `
 
   expect(result).toEqual(expected)
@@ -82,7 +84,7 @@ test('Should add empty line after @description and @example description if neces
  * @description Single line description.
  *
  * @example
-TODO
+TODO.
  */
 `
 
@@ -95,7 +97,7 @@ TODO
  * @description Single line description.
  *
  * @example
-TODO
+TODO.
  *
  * @return {Boolean} Always true.
  */

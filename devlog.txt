@@ -134,3 +134,23 @@ sob, 18 sty 2020, 21:03:13 CET
 Testy bardo pomagają w pracy.  Dodałem kilka usprawnień.  Między
 innymi obsługę synonimów tagów.  To jeszcze nie koniec.  Kilka tagów
 nadal wymaga specjalnego traktowania.
+
+nie, 19 sty 2020, 10:15:53 CET
+
+Źle się dzieje.  Wszystko coraz lepiej i fajnie to już wygląda.  Mam
+trzy problemy z czego dwa nie będę w stanie naprawić używając tego
+prasera co do tej pory.
+
+Pierwszy najmniejszy problem to długie linie opisów.  Trzeba je
+zawijać.  To jeszcze da się zrobić.
+
+Drugi problem to opis tagu @example.  Parser usuwa białe znaki
+pierwszej linii opisu przez co dodany do @example kod może mieć złe
+wcięcia.  Na to też widzę rozwiązanie.  Może uda się użyć prettiera na
+samym opisie tego tagu.  To byłoby super.
+
+Ostatni problem jest niestety nie do przejścia.  Parser nie
+interpretuje domyślnych wartości parametrów funkcji.  Po prostu ich
+nie ma.  Szukanie teraz innego parsera może się okazać zgubne.  Pewnie
+każdy z nich posiada jakieś wady.  Mimo to poszukam bo tego problemu
+nie przeskoczę jeśli informacja się traci.

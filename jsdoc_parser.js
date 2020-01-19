@@ -99,13 +99,18 @@ module.exports = function jsdocParser(text, parsers, options) {
 
         // TODO check how types are parsed if default value is passed
         if (tag.type) {
-          if (tag.type.expression) tag.type.elements = tag.type.expression.elements
-          if (tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
+          if (!tag.type.name) {
+            if (tag.type.expression) {
+              tag.type.name = tag.type.expression.name
+              tag.type.elements = tag.type.expression.elements
+            }
+            if (tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
+          }
           if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
         }
 
         if (tag.title !== 'example') tag.description = formatDescription(tag.description)
-        if (!tag.description && tag.title !== 'private') tag.description = 'TODO'
+        if (!tag.description && tag.title !== 'private') tag.description = 'TODO.'
 
         return tag
       })
