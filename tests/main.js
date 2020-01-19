@@ -74,7 +74,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true
  *
  * @param {String|Number} text Some text description that is very long and needs
  *                             to be wrapped.
- * @param {String} [defaultValue] TODO.
+ * @param {String} [defaultValue="defaultTest"] TODO.
  * @param {Number|Null} [optionalNumber] TODO.
  * @return {Boolean} Description for @return with s.
  */

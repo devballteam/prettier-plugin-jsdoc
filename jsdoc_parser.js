@@ -108,14 +108,21 @@ module.exports = function jsdocParser(text, parsers, options) {
               tag.type.name = tag.type.expression.name
               tag.type.elements = tag.type.expression.elements
             }
-            if (tag.type.elements) tag.type.name = tag.type.elements.map(e => e.name).join('|')
+            if (tag.type.elements)
+              tag.type.name = tag.type.elements.map(e => e.name).join('|')
           }
 
-          // Figure out tag.name if necessary
-          if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
-          // TODO At this point I should RegExp the hell out of
-          // original string to find out if there is a default value
-          // in tag.name.
+          if (tag.name) {
+            // Figure out if tag type have default value
+            const part1 = commentString.split(tag.name)[1]
+            const part2 = part1.split(/\s/)[0]
+            const sliceIndex = part2.indexOf('=')
+            if (sliceIndex !== -1)
+              tag.name = tag.name + part2.slice(sliceIndex, part2.length).replace(']', '')
+
+            // Optional tag name
+            if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
+          }
         }
 
         if (tag.title !== 'example') tag.description = formatDescription(tag.description)

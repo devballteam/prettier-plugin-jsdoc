@@ -200,3 +200,12 @@ to na jednym z projektów w pracy.
 Zostało obsłużenie wartości domyślnych i opcji.  Nie ukrywam, że jak
 to zrobię to chciałbym jeszcze spróbować zamienić to w plugin.  Tak
 będzie łatwiej wspierać Prettiera w edytorach tekstowych.
+
+nie, 19 sty 2020, 19:00:55 CET
+
+Wartość domyślna już działa.  Przynajmniej na moim teście.
+Niepotrzebnie wcześniej tak panikowałem.  Prawdziwy test będzie
+dopiero na większym projekcie pełnym JSDocków.
+
+Teraz obsługa opcji a na deser zamienię to wszystko w plugin.  Taką
+mam nadzieję.
