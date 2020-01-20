@@ -1,8 +1,8 @@
+const cwd = process.cwd()
+const path = require('path')
 const doctrine = require('doctrine')
 const prettier = require('prettier')
-
-// TODO This also could be taken from options.
-const printWidth = 80
+const babelFlow = require(path.join(cwd, 'node_modules/prettier/parser-babylon.js')).parsers['babel-flow']
 
 const tagSynonyms = {
   // One TAG TYPE can have different titles called SYNONYMS.  We want
@@ -67,7 +67,8 @@ function getTagOrderWeight(tagTitle) {
     'see'         : 3,
     'description' : 4,
     'examples'    : 5,
-    // Evertthing else will have 6
+    // TODO everything else could be sorted alphabetically
+    // Everything else will have 6
     'param'       : 7,
     'return'      : 8,
   }
@@ -75,13 +76,12 @@ function getTagOrderWeight(tagTitle) {
 }
 
 /** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
-module.exports = function jsdocParser(text, parsers, options) {
+function jsdocParser(text, parsers, options) {
   const ast = parsers['babel-flow'](text)
 
-  if (!options.jsdoc) options.jsdoc = { spaces: 1 }
-  if (!options.jsdoc.spaces) options.jsdoc.spaces = 1
-
-  const gap = ' '.repeat(options.jsdoc.spaces)
+  // Options
+  const gap = ' '.repeat(options.jsdocSpaces)
+  const printWidth = options.jsdocPrintWidth
 
   ast.comments.forEach(comment => {
     // Parse only comment blocks
@@ -125,6 +125,7 @@ module.exports = function jsdocParser(text, parsers, options) {
             }
           }
 
+          // Additional operations on tag.name
           if (tag.name) {
             // Figure out if tag type have default value
             const part1 = commentString.split(tag.name)[1]
@@ -138,7 +139,7 @@ module.exports = function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (!['example', 'memberof'].includes(tag.title))
+        if (['description', 'param', 'return'].includes(tag.title))
           tag.description = formatDescription(tag.description)
 
         if (!tag.description && ['description', 'param', 'return', 'memberof'].includes(tag.title))
@@ -204,4 +205,33 @@ module.exports = function jsdocParser(text, parsers, options) {
   })
 
   return ast
+}
+
+// jsdoc-parser
+module.exports = {
+  languages: [{
+    name: 'JavaScript',
+    parsers: ['jsdoc-parser'],
+  }],
+  parsers: {
+    'jsdoc-parser': Object.assign({}, babelFlow, { parse: jsdocParser })
+  },
+  options: {
+    jsdocSpaces: {
+      type: 'int',
+      category: 'Global',
+      default: 1,
+      description: 'SPACES SPACES',
+    },
+    jsdocPrintWidth: {
+      type: 'int',
+      category: 'Global',
+      default: 80,
+      description: 'wrap wrap wrap',
+    }
+  },
+  defaultOptions: {
+    jsdocSpaces: 1,
+    jsdocPrintWidth: 80,
+  }
 }

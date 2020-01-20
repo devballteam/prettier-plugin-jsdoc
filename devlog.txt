@@ -221,3 +221,18 @@ pon, 20 sty 2020, 12:03:57 CET
 Nareszcie mogłem wypróbować kod na dużej ilości JSDocków.  Generalnie
 super.  Były problemy z zawijaniem wierszy i formatowaniem kodu
 w @example, ale już jest ok.
+
+pon, 20 sty 2020, 13:38:03 CET
+
+Odnoszę wrażenie, że opcje same zaczną działać jeśli tylko parser
+będzie używany w formie dodatku.  Dlatego spróbuję zamienić to na
+plugin.  Byłoby super jakby zadziałało.
+
+pon, 20 sty 2020, 14:13:07 CET
+
+O kurde.  Chyba zaskoczyło.  Testy przeszły.  Ale super.  Ciekawe czy
+opcje też działają.
+
+pon, 20 sty 2020, 14:16:12 CET
+
+DZIAŁAJĄ!!!  Super to commit i można podpinać pod projekt i Emacsa.

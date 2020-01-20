@@ -4,7 +4,12 @@ const path = require('path')
 const jsdocParser = require(path.join(cwd, 'jsdoc_parser'))
 
 function subject(code, options = {}) {
-  return prettier.format(code, Object.assign(options, { parser: jsdocParser }))
+  return prettier.format(code, {
+    parser: 'jsdoc-parser',
+    plugins: ['.'],
+    jsdocSpaces: 1,
+    jsdocPrintWidth: 80
+  });
 }
 
 test('JS code should be formatted as usuall', () => {
@@ -67,12 +72,12 @@ const testFunction = (text, defaultValue, optionalNumber) => true
  *              with a dot.
  *
  * @example
- *  var one = 5;
- *  var two = 10;
+ *   var one = 5;
+ *   var two = 10;
  *
- *  if (one > 2) {
- *    two += one;
- *  }
+ *   if (one > 2) {
+ *     two += one;
+ *   }
  *
  * @param {String|Number} text Some text description that is very long and needs
  *                             to be wrapped.
