@@ -215,3 +215,9 @@ nie, 19 sty 2020, 19:20:32 CET
 Kończą mi się siły.  Naprawiłem jeszcze drobne błędy i dodałem
 brakującą dokumentację do jednej funkcji.  Chyba na dzisiaj
 wystarczy.  Będzie łatwiej w pracy ogarnąć te opcje i plugin.
+
+pon, 20 sty 2020, 12:03:57 CET
+
+Nareszcie mogłem wypróbować kod na dużej ilości JSDocków.  Generalnie
+super.  Były problemy z zawijaniem wierszy i formatowaniem kodu
+w @example, ale już jest ok.

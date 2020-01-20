@@ -2,7 +2,6 @@ const doctrine = require('doctrine')
 const prettier = require('prettier')
 
 // TODO This also could be taken from options.
-// TODO Check what happen when marginLength is longer then printWidth.
 const printWidth = 80
 
 const tagSynonyms = {
@@ -65,13 +64,14 @@ function getTagOrderWeight(tagTitle) {
   var tagsWeightMap = {
     'private'     : 1,
     'memberof'    : 2,
-    'description' : 3,
-    'examples'    : 4,
-    // Evertthing else will have 5
-    'param'       : 6,
-    'return'      : 7,
+    'see'         : 3,
+    'description' : 4,
+    'examples'    : 5,
+    // Evertthing else will have 6
+    'param'       : 7,
+    'return'      : 8,
   }
-  return tagsWeightMap[tagTitle] || 5
+  return tagsWeightMap[tagTitle] || 6
 }
 
 /** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
@@ -114,8 +114,15 @@ module.exports = function jsdocParser(text, parsers, options) {
               tag.type.name = tag.type.expression.name
               tag.type.elements = tag.type.expression.elements
             }
-            if (tag.type.elements)
-              tag.type.name = tag.type.elements.map(e => e.name).join('|')
+            if (tag.type.elements) {
+              tag.type.name = tag.type.elements.map(e => {
+                const typeNameMap = {
+                  'UndefinedLiteral': 'undefined',
+                  'NullLiteral': 'null',
+                }
+                return typeNameMap[e.type] || e.name || 'undefined'
+              }).join('|')
+            }
           }
 
           if (tag.name) {
@@ -131,8 +138,11 @@ module.exports = function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (!['example', 'memberof'].includes(tag.title)) tag.description = formatDescription(tag.description)
-        if (!tag.description && !['example', 'private'].includes(tag.title)) tag.description = 'TODO.'
+        if (!['example', 'memberof'].includes(tag.title))
+          tag.description = formatDescription(tag.description)
+
+        if (!tag.description && ['description', 'param', 'return', 'memberof'].includes(tag.title))
+          tag.description = 'TODO.'
 
         return tag
       })
@@ -151,11 +161,15 @@ module.exports = function jsdocParser(text, parsers, options) {
         if (tag.description && tag.title !== 'example') {
           tagString += gap
           const marginLength = tagString.length
+          let maxWidth = printWidth
+          if (marginLength >= maxWidth) maxWidth = marginLength + 40
           let description = tagString + tag.description
           tagString = ''
 
-          while (description.length > printWidth) {
-            const sliceIndex = description.lastIndexOf(' ', printWidth)
+
+          while (description.length > maxWidth) {
+            let sliceIndex = description.lastIndexOf(' ', maxWidth)
+            if (sliceIndex === -1 || sliceIndex <= marginLength + 2) sliceIndex = maxWidth
             tagString += description.slice(0, sliceIndex)
             description = description.slice(sliceIndex + 1, description.length)
             description = '\n *' + ' '.repeat(marginLength - 2) + description
@@ -164,10 +178,17 @@ module.exports = function jsdocParser(text, parsers, options) {
           if (description.length > marginLength) tagString += description
         }
 
-        // Use prettier on @example tag description
+        // Try to use prettier on @example tag description
         if (tag.title === 'example') {
-          tagString += prettier.format(tag.description, options).replace(/(^|\n)/g, '\n *  ')
-          tagString = tagString.slice(0, tagString.length - 5)
+          try {
+            const formatedDescription = prettier.format(tag.description, options)
+            tagString += formatedDescription.replace(/(^|\n)/g, '\n *   ')
+            tagString = tagString.slice(0, tagString.length - 6)
+          } catch (err) {
+            console.error(new Error('Cannot format tag description'), tag.description)
+            const description = tag.description.split('\n').map(l => ' *  ' + l.trim()).join('\n')
+            tagString += '\n *  // ERROR Invalid JS\n' + description
+          }
         }
 
         tagString += '\n'
