@@ -1,8 +1,6 @@
-const cwd = process.cwd()
-const path = require('path')
 const doctrine = require('doctrine')
 const prettier = require('prettier')
-const babelFlow = require(path.join(cwd, 'node_modules/prettier/parser-babylon.js')).parsers['babel-flow']
+const babelFlow = require('prettier/parser-babylon').parsers['babel-flow']
 
 const tagSynonyms = {
   // One TAG TYPE can have different titles called SYNONYMS.  We want
@@ -41,7 +39,7 @@ const tagSynonyms = {
 }
 
 /**
- * Trim, make single line with capitalized text and dot at the end.
+ * Trim, make single line with capitalized text
  * @param {String} text
  * @return {String}
  */
@@ -51,7 +49,6 @@ function formatDescription(text) {
   text = text.replace(/\s\s+/g, ' ')             // Avoid multiple spaces
   text = text.replace(/\n/g, ' ')                // Make single line
   text = text[0].toUpperCase() + text.slice(1)   // Capitalize
-  if (text[text.length - 1] !== '.') text += '.' // End with dot
   return text || ''
 }
 
@@ -63,16 +60,19 @@ function formatDescription(text) {
 function getTagOrderWeight(tagTitle) {
   var tagsWeightMap = {
     'private'     : 1,
-    'memberof'    : 2,
-    'see'         : 3,
-    'description' : 4,
-    'examples'    : 5,
+    'global'      : 2,
+    'class'       : 3,
+    'memberof'    : 4,
+    'see'         : 5,
+    'description' : 6,
+    'todo'        : 7,
+    'examples'    : 8,
     // TODO everything else could be sorted alphabetically
-    // Everything else will have 6
-    'param'       : 7,
-    'return'      : 8,
+    // Everything else will have 9
+    'param'       : 10,
+    'return'      : 11,
   }
-  return tagsWeightMap[tagTitle] || 6
+  return tagsWeightMap[tagTitle] || 9
 }
 
 /** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
@@ -132,18 +132,21 @@ function jsdocParser(text, parsers, options) {
             const part2 = part1.split(/\s/)[0]
             const sliceIndex = part2.indexOf('=')
             if (sliceIndex !== -1)
-              tag.name = tag.name + part2.slice(sliceIndex, part2.length).replace(']', '')
+              tag.name = tag.name + '=' + part2
+                    .slice(sliceIndex + 1, part2.length)
+                    .replace(']', '')
+                    .trim()
 
             // Optional tag name
             if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
           }
         }
 
-        if (['description', 'param', 'return'].includes(tag.title))
+        if (['description', 'param', 'return', 'todo'].includes(tag.title))
           tag.description = formatDescription(tag.description)
 
-        if (!tag.description && ['description', 'param', 'return', 'memberof'].includes(tag.title))
-          tag.description = 'TODO.'
+        if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title))
+          tag.description = 'TODO'
 
         return tag
       })
@@ -186,16 +189,14 @@ function jsdocParser(text, parsers, options) {
             tagString += formatedDescription.replace(/(^|\n)/g, '\n *   ')
             tagString = tagString.slice(0, tagString.length - 6)
           } catch (err) {
-            console.error(new Error('Cannot format tag description'), tag.description)
-            const description = tag.description.split('\n').map(l => ' *  ' + l.trim()).join('\n')
-            tagString += '\n *  // ERROR Invalid JS\n' + description
+            tagString += '\n' + tag.description.split('\n').map(l => ' *   ' + l.trim()).join('\n')
           }
         }
 
         tagString += '\n'
 
-        // Add empty line after @description or @example if there is something below
-        if (['description', 'example'].includes(tag.title) && tagIndex !== parsed.tags.length - 1)
+        // Add empty line after some tags if there is something below
+        if (['description', 'example', 'todo'].includes(tag.title) && tagIndex !== parsed.tags.length - 1)
           tagString += ' *\n'
 
         comment.value += tagString
