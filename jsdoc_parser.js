@@ -58,21 +58,23 @@ function formatDescription(text) {
  * @return {Number} Tag weight
  */
 function getTagOrderWeight(tagTitle) {
-  var tagsWeightMap = {
-    'private'     : 1,
-    'global'      : 2,
-    'class'       : 3,
-    'memberof'    : 4,
-    'see'         : 5,
-    'description' : 6,
-    'todo'        : 7,
-    'examples'    : 8,
-    // TODO everything else could be sorted alphabetically
-    // Everything else will have 9
-    'param'       : 10,
-    'return'      : 11,
-  }
-  return tagsWeightMap[tagTitle] || 9
+  const order = [
+    'private',
+    'global',
+    'class',
+    'memberof',
+    'namespace',
+    'callback',
+    'description',
+    'see',
+    'todo',
+    'examples',
+    'other',
+    'param',
+    'return',
+  ]
+  const index = order.indexOf(tagTitle)
+  return index === -1 ? order.indexOf('other') : index
 }
 
 /** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
@@ -158,22 +160,26 @@ function jsdocParser(text, parsers, options) {
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
           tagString += gap
-          const marginLength = tagString.length
-          let maxWidth = printWidth
-          if (marginLength >= maxWidth) maxWidth = marginLength + 40
-          let description = tagString + tag.description
-          tagString = ''
 
+          if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
+            tagString += tag.description
+          } else { // Wrap tag description
+            const marginLength = tagString.length
+            let maxWidth = printWidth
+            if (marginLength >= maxWidth) maxWidth = marginLength + 40
+            let description = tagString + tag.description
+            tagString = ''
 
-          while (description.length > maxWidth) {
-            let sliceIndex = description.lastIndexOf(' ', maxWidth)
-            if (sliceIndex === -1 || sliceIndex <= marginLength + 2) sliceIndex = maxWidth
-            tagString += description.slice(0, sliceIndex)
-            description = description.slice(sliceIndex + 1, description.length)
-            description = '\n *' + ' '.repeat(marginLength - 2) + description
+            while (description.length > maxWidth) {
+              let sliceIndex = description.lastIndexOf(' ', maxWidth)
+              if (sliceIndex === -1 || sliceIndex <= marginLength + 2) sliceIndex = maxWidth
+              tagString += description.slice(0, sliceIndex)
+              description = description.slice(sliceIndex + 1, description.length)
+              description = '\n *' + ' '.repeat(marginLength - 2) + description
+            }
+
+            if (description.length > marginLength) tagString += description
           }
-
-          if (description.length > marginLength) tagString += description
         }
 
         // Try to use prettier on @example tag description
