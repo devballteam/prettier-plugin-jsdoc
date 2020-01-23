@@ -262,6 +262,7 @@ module.exports = {
   defaultOptions: {
     jsdocSpaces: 1,
     jsdocPrintWidth: 80,
+    jsdocAddDotToDescription: false,
     jsdocDescriptionTag: true,
   }
 }
