@@ -52,31 +52,6 @@ function formatDescription(text) {
   return text || ''
 }
 
-/**
- * Control order of tags by weights.  Smaller value brings tag higher.
- * @param {String} tagTitle
- * @return {Number} Tag weight
- */
-function getTagOrderWeight(tagTitle) {
-  const order = [
-    'private',
-    'global',
-    'class',
-    'memberof',
-    'namespace',
-    'callback',
-    'description',
-    'see',
-    'todo',
-    'examples',
-    'other',
-    'param',
-    'return',
-  ]
-  const index = order.indexOf(tagTitle)
-  return index === -1 ? order.indexOf('other') : index
-}
-
 /** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
 function jsdocParser(text, parsers, options) {
   const ast = parsers['babel-flow'](text)
@@ -84,6 +59,16 @@ function jsdocParser(text, parsers, options) {
   // Options
   const gap = ' '.repeat(options.jsdocSpaces)
   const printWidth = options.jsdocPrintWidth
+
+  /**
+   * Control order of tags by weights.  Smaller value brings tag higher.
+   * @param {String} tagTitle
+   * @return {Number} Tag weight
+   */
+  function getTagOrderWeight(tagTitle) {
+    const index = options.jsdocTagsOrder.indexOf(tagTitle)
+    return index === -1 ? (options.jsdocTagsOrder.indexOf('other') || 0) : index
+  }
 
   ast.comments.forEach(comment => {
     // Parse only comment blocks
@@ -217,18 +202,41 @@ module.exports = {
   parsers: {
     'jsdoc-parser': Object.assign({}, babelFlow, { parse: jsdocParser })
   },
+  // How to define options: https://github.com/prettier/prettier/blob/master/src/cli/constant.js#L16
+  // Issue with string type: https://github.com/prettier/prettier/issues/6151
   options: {
     jsdocSpaces: {
       type: 'int',
-      category: 'Global',
+      category: 'jsdoc',
       default: 1,
-      description: 'SPACES SPACES',
+      description: 'How many spaces will be used to separate tag elements.',
     },
     jsdocPrintWidth: {
       type: 'int',
-      category: 'Global',
+      category: 'jsdoc',
       default: 80,
-      description: 'wrap wrap wrap',
+      description: 'After how many characters description text should be wrapped.',
+    },
+    jsdocTagsOrder: {
+      type: 'path',
+      category: 'jsdoc',
+      array: true, // Fancy way to get option in array form
+      default: [{ value: [
+        'private',
+        'global',
+        'class',
+        'memberof',
+        'namespace',
+        'callback',
+        'description',
+        'see',
+        'todo',
+        'examples',
+        'other',
+        'param',
+        'return',
+      ]}],
+      description: 'Define order of tags.',
     }
   },
   defaultOptions: {
