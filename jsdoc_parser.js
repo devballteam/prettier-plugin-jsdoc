@@ -138,23 +138,19 @@ function jsdocParser(text, parsers, options) {
 
       // Create final jsDoc string
       .forEach((tag, tagIndex) => {
-        let tagString
+        let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag) 
+        let tagString = ` * `
 
-        if (tag.title !== 'description' || options.jsdocDescriptionTag)
-          tagString = ` * @${tag.title}`
-        else
-          tagString = ` *`
-
+        if (useTagTitle) tagString += `@${tag.title}`
         if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
         if (tag.name) tagString += gap + tag.name
 
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
-          tagString += gap
-
           if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
             tagString += tag.description
           } else { // Wrap tag description
+            if (useTagTitle) tagString += gap
             const marginLength = tagString.length
             let maxWidth = printWidth
             if (marginLength >= maxWidth) maxWidth = marginLength + 40
