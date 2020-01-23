@@ -46,7 +46,7 @@ test('Should format regular jsDoc', () => {
 * so it have more then one line and don't end with a dot
 * REPEATED TWO TIMES BECAUSE IT WAS EASIER to copy
 * function example description that was wrapped by hand
-* so it have more then one line and don't end with a dot
+* so it have more then one line.
 * @returns {Boolean} Description for @return with s
 * @param {String|Number} text - some text description that is very long and needs to be wrapped
 * @param {String} [defaultValue="defaultTest"] TODO
@@ -68,8 +68,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true
  * @description Function example description that was wrapped by hand so it have
  *              more then one line and don't end with a dot REPEATED TWO TIMES
  *              BECAUSE IT WAS EASIER to copy function example description that
- *              was wrapped by hand so it have more then one line and don't end
- *              with a dot.
+ *              was wrapped by hand so it have more then one line.
  *
  * @example
  *   var one = 5;
@@ -80,10 +79,10 @@ const testFunction = (text, defaultValue, optionalNumber) => true
  *   }
  *
  * @param {String|Number} text Some text description that is very long and needs
- *                             to be wrapped.
- * @param {String} [defaultValue="defaultTest"] TODO.
- * @param {Number|Null} [optionalNumber] TODO.
- * @return {Boolean} Description for @return with s.
+ *                             to be wrapped
+ * @param {String} [defaultValue="defaultTest"] TODO
+ * @param {Number|Null} [optionalNumber] TODO
+ * @return {Boolean} Description for @return with s
  */
 const testFunction = (text, defaultValue, optionalNumber) => true;
 `
@@ -95,7 +94,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true;
 test('Should add empty line after @description and @example description if necessary', () => {
   const Result1 = subject(`/** single line description*/`)
   const Expected1 = `/**
- * @description Single line description.
+ * @description Single line description
  */
 `
   const Result2 = subject(`/**
@@ -103,7 +102,7 @@ test('Should add empty line after @description and @example description if neces
  * @example
  */`)
   const Expected2 = `/**
- * @description Single line description.
+ * @description Single line description
  *
  * @example
  */
@@ -115,11 +114,11 @@ test('Should add empty line after @description and @example description if neces
  * @example
  */`)
   const Expected3 = `/**
- * @description Single line description.
+ * @description Single line description
  *
  * @example
  *
- * @return {Boolean} Always true.
+ * @return {Boolean} Always true
  */
 `
 
