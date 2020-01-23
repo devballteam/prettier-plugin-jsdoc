@@ -43,12 +43,13 @@ const tagSynonyms = {
  * @param {String} text
  * @return {String}
  */
-function formatDescription(text) {
-  text = text ? text.trim() : ''
+function formatDescription(text, insertDot) {
   if (!text) return ''
-  text = text.replace(/\s\s+/g, ' ')             // Avoid multiple spaces
-  text = text.replace(/\n/g, ' ')                // Make single line
-  text = text[0].toUpperCase() + text.slice(1)   // Capitalize
+  text = text.trim()
+  text = text.replace(/\s\s+/g, ' ')                       // Avoid multiple spaces
+  text = text.replace(/\n/g, ' ')                          // Make single line
+  if (insertDot) text = text.replace(/(\w)(?=$)/g, '$1.')  // Insert dot if needed
+  text = text[0].toUpperCase() + text.slice(1)             // Capitalize
   return text || ''
 }
 
@@ -124,10 +125,10 @@ function jsdocParser(text, parsers, options) {
         }
 
         if (['description', 'param', 'return', 'todo'].includes(tag.title))
-          tag.description = formatDescription(tag.description)
+          tag.description = formatDescription(tag.description, options.jsdocAddDotToDescription)
 
         if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title))
-          tag.description = 'TODO'
+          tag.description = formatDescription('TODO', options.jsdocAddDotToDescription)
 
         return tag
       })
@@ -137,7 +138,12 @@ function jsdocParser(text, parsers, options) {
 
       // Create final jsDoc string
       .forEach((tag, tagIndex) => {
-        let tagString = ` * @${tag.title}`
+        let tagString
+
+        if (tag.title !== 'description' || options.jsdocDescriptionTag)
+          tagString = ` * @${tag.title}`
+        else
+          tagString = ` * `
 
         if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
         if (tag.name) tagString += gap + tag.name
@@ -237,10 +243,23 @@ module.exports = {
         'return',
       ]}],
       description: 'Define order of tags.',
+    },
+    jsdocAddDotToDescription: {
+      type: 'boolean',
+      category: 'Global',
+      default: true,
+      description: 'Punctuation, is: a. key?'
+    },
+    jsdocDescriptionTag: {
+      type: 'boolean',
+      category: 'Global',
+      default: true,
+      description: 'please disable me',
     }
   },
   defaultOptions: {
     jsdocSpaces: 1,
     jsdocPrintWidth: 80,
+    jsdocDescriptionTag: true,
   }
 }
