@@ -128,14 +128,8 @@ function jsdocParser(text, parsers, options) {
           // Additional operations on tag.name
           if (tag.name) {
             // Figure out if tag type have default value
-            const part1 = commentString.split(tag.name)[1]
-            const part2 = part1.split(/\s/)[0]
-            const sliceIndex = part2.indexOf('=')
-            if (sliceIndex !== -1)
-              tag.name = tag.name + '=' + part2
-                    .slice(sliceIndex + 1, part2.length)
-                    .replace(']', '')
-                    .trim()
+            const part = commentString.split(new RegExp(`@.+{.+}.+${tag.name}\s?=\s?`))[1]
+            if (part) tag.name = tag.name + '=' + part.split(/\s/)[0].replace(']', '')
 
             // Optional tag name
             if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
