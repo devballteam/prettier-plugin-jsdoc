@@ -46,7 +46,7 @@ const tagSynonyms = {
  * @return {String}
  */
 function formatDescription(text, insertDot) {
-  text = text.trim()
+  text = text ? text.trim() : ''
   if (!text) return ''
   text = text.replace(/\s\s+/g, ' ')                       // Avoid multiple spaces
   text = text.replace(/\n/g, ' ')                          // Make single line
@@ -129,7 +129,7 @@ function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (tag.description && ['description', 'param', 'return', 'todo'].includes(tag.title))
+        if (['description', 'param', 'return', 'todo'].includes(tag.title))
           tag.description = formatDescription(tag.description, options.jsdocAddDotToDescription)
 
         if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title) &&
