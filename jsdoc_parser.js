@@ -143,7 +143,7 @@ function jsdocParser(text, parsers, options) {
         if (tag.title !== 'description' || options.jsdocDescriptionTag)
           tagString = ` * @${tag.title}`
         else
-          tagString = ` * `
+          tagString = ` *`
 
         if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
         if (tag.name) tagString += gap + tag.name
