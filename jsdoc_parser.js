@@ -98,7 +98,6 @@ function jsdocParser(text, parsers, options) {
     if (parsed.description && !parsed.tags.find(t => t.title.toLowerCase() === 'description'))
       parsed.tags.push({ title: 'description', description: parsed.description })
 
-    let notAligmentTag
     let maxTagTitleLength = 0
     let maxTagTypeNameLength = 0
     let maxTagNameLength = 0
