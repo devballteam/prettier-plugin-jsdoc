@@ -38,6 +38,14 @@ const tagSynonyms = {
   'params'       : 'param',
 }
 
+const vertiacallyAlignableTags = [
+  'param',
+  'property',
+  'return',
+  'throws',
+  'yields',
+]
+
 /**
  * Trim, make single line with capitalized text. Insert dot if flag for it is
  * set to true and last character is a word character
@@ -90,12 +98,20 @@ function jsdocParser(text, parsers, options) {
     if (parsed.description && !parsed.tags.find(t => t.title.toLowerCase() === 'description'))
       parsed.tags.push({ title: 'description', description: parsed.description })
 
+    let notAligmentTag
+    let maxTagTitleLength = 0
+    let maxTagTypeNameLength = 0
+    let maxTagNameLength = 0
+
     parsed.tags
 
       // Prepare tags data
       .map(tag => {
         tag.title = tag.title.trim().toLowerCase()
         tag.title = tagSynonyms[tag.title] || tag.title
+
+        if (vertiacallyAlignableTags.includes(tag.title))
+          maxTagTitleLength = Math.max(maxTagTitleLength, tag.title.length)
 
         if (tag.type) {
           // Figure out tag.type.name
@@ -118,6 +134,9 @@ function jsdocParser(text, parsers, options) {
             }
           }
 
+          if (vertiacallyAlignableTags.includes(tag.title))
+            maxTagTypeNameLength = Math.max(maxTagTypeNameLength, tag.type.name.length)
+
           // Additional operations on tag.name
           if (tag.name) {
             // Figure out if tag type have default value
@@ -126,6 +145,8 @@ function jsdocParser(text, parsers, options) {
 
             // Optional tag name
             if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
+            if (vertiacallyAlignableTags.includes(tag.title))
+              maxTagNameLength = Math.max(maxTagNameLength, tag.name.length)
           }
         }
 
@@ -144,19 +165,41 @@ function jsdocParser(text, parsers, options) {
 
       // Create final jsDoc string
       .forEach((tag, tagIndex) => {
+        let tagTitleGapAdj = 0
+        let tagTypeGapAdj = 0
+        let tagNameGapAdj = 0
+        let descGapAdj = 0
+
+        if (options.jsdocVerticalAlignment && vertiacallyAlignableTags.includes(tag.title)) {
+          if (tag.title)
+            tagTitleGapAdj += maxTagTitleLength - tag.title.length
+          else
+            descGapAdj += maxTagTitleLength + gap.length
+
+          if (tag.type.name) 
+            tagTypeGapAdj += maxTagTypeNameLength - tag.type.name.length
+          else
+            descGapAdj += maxTagTypeNameLength + gap.length
+
+          if (tag.name)
+            tagNameGapAdj +=  maxTagNameLength - tag.name.length
+          else
+            descGapAdj = maxTagNameLength + gap.length
+        }
+
         let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag) 
         let tagString = ` * `
 
-        if (useTagTitle) tagString += `@${tag.title}`
-        if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
-        if (tag.name) tagString += gap + tag.name
+        if (useTagTitle) tagString += `@${tag.title}` + ' '.repeat(tagTitleGapAdj)
+        if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}` + ' '.repeat(tagTypeGapAdj)
+        if (tag.name) tagString += gap + tag.name + ' '.repeat(tagNameGapAdj)
 
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
           if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
             tagString += tag.description
           } else { // Wrap tag description
-            if (useTagTitle) tagString += gap
+            if (useTagTitle) tagString += gap + ' '.repeat(descGapAdj)
             const marginLength = tagString.length
             let maxWidth = printWidth
             if (marginLength >= maxWidth) maxWidth = marginLength + 40
@@ -257,6 +300,12 @@ module.exports = {
       category: 'Global',
       default: true,
       description: 'please disable me',
+    },
+    jsdocVerticalAlignment: {
+      type: 'boolean',
+      category: 'Global',
+      default: false,
+      description: 'keep nice and align',
     }
   },
   defaultOptions: {
@@ -264,5 +313,6 @@ module.exports = {
     jsdocPrintWidth: 80,
     jsdocAddDotToDescription: false,
     jsdocDescriptionTag: true,
+    jsdocVerticalAlignment: false,
   }
 }
