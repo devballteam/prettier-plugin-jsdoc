@@ -43,7 +43,7 @@ const vertiacallyAlignableTags = [
   'property',
   'return',
   'throws',
-  'yields',
+  // 'yields',
 ]
 
 /**
@@ -150,12 +150,12 @@ function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (['description', 'param', 'return', 'todo'].includes(tag.title))
-          tag.description = formatDescription(tag.description, options.jsdocAddDotToDescription)
+        if (['description', 'param', 'property', 'return', 'yields', 'throws', 'todo'].includes(tag.title))
+          tag.description = formatDescription(tag.description, options.jsdocDescriptionWithDot)
 
-        if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title) &&
+        if (!tag.description && ['description', 'param', 'property', 'return', 'yields', 'throws', 'todo', 'memberof'].includes(tag.title) &&
           (!tag.type || !['Undefined', 'undefined', 'Null', 'null', 'Void', 'void'].includes(tag.type.name)))
-          tag.description = formatDescription('TODO', options.jsdocAddDotToDescription)
+          tag.description = formatDescription('TODO', options.jsdocDescriptionWithDot)
 
         return tag
       })
@@ -171,20 +171,14 @@ function jsdocParser(text, parsers, options) {
         let descGapAdj = 0
 
         if (options.jsdocVerticalAlignment && vertiacallyAlignableTags.includes(tag.title)) {
-          if (tag.title)
-            tagTitleGapAdj += maxTagTitleLength - tag.title.length
-          else
-            descGapAdj += maxTagTitleLength + gap.length
+          if (tag.title) tagTitleGapAdj += maxTagTitleLength - tag.title.length
+          else if (maxTagTitleLength) descGapAdj += maxTagTitleLength + gap.length
 
-          if (tag.type.name) 
-            tagTypeGapAdj += maxTagTypeNameLength - tag.type.name.length
-          else
-            descGapAdj += maxTagTypeNameLength + gap.length
+          if (tag.type && tag.type.name) tagTypeGapAdj += maxTagTypeNameLength - tag.type.name.length
+          else if (maxTagTypeNameLength) descGapAdj += maxTagTypeNameLength + gap.length
 
-          if (tag.name)
-            tagNameGapAdj +=  maxTagNameLength - tag.name.length
-          else
-            descGapAdj = maxTagNameLength + gap.length
+          if (tag.name) tagNameGapAdj +=  maxTagNameLength - tag.name.length
+          else if (maxTagNameLength) descGapAdj = maxTagNameLength + gap.length
         }
 
         let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag) 
@@ -196,10 +190,10 @@ function jsdocParser(text, parsers, options) {
 
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
+          if (useTagTitle) tagString += gap + ' '.repeat(descGapAdj)
           if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
             tagString += tag.description
           } else { // Wrap tag description
-            if (useTagTitle) tagString += gap + ' '.repeat(descGapAdj)
             const marginLength = tagString.length
             let maxWidth = printWidth
             if (marginLength >= maxWidth) maxWidth = marginLength + 40
@@ -289,29 +283,29 @@ module.exports = {
       ]}],
       description: 'Define order of tags.',
     },
-    jsdocAddDotToDescription: {
+    jsdocDescriptionWithDot: {
       type: 'boolean',
       category: 'Global',
       default: false,
-      description: 'Punctuation, is: a. key?'
+      description: 'Should dot be inserted at the end of description'
     },
     jsdocDescriptionTag: {
       type: 'boolean',
       category: 'Global',
       default: true,
-      description: 'please disable me',
+      description: 'Should description tag be used',
     },
     jsdocVerticalAlignment: {
       type: 'boolean',
       category: 'Global',
       default: false,
-      description: 'keep nice and align',
+      description: 'Should tags, types, names and description be aligned',
     }
   },
   defaultOptions: {
     jsdocSpaces: 1,
     jsdocPrintWidth: 80,
-    jsdocAddDotToDescription: false,
+    jsdocDescriptionWithDot: false,
     jsdocDescriptionTag: true,
     jsdocVerticalAlignment: false,
   }
