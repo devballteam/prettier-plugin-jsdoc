@@ -8,7 +8,8 @@ function subject(code, options = {}) {
     parser: 'jsdoc-parser',
     plugins: ['.'],
     jsdocSpaces: 1,
-    jsdocPrintWidth: 80
+    jsdocPrintWidth: 80,
+    jsdocAddDotToDescription: true
   });
 }
 

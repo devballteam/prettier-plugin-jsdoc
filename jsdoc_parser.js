@@ -39,13 +39,15 @@ const tagSynonyms = {
 }
 
 /**
- * Trim, make single line with capitalized text
+ * Trim, make single line with capitalized text. Insert dot if flag for it is
+ * set to true and last character is a word character
  * @param {String} text
+ * @param {Boolean} insertDot flag for dot at the end of text
  * @return {String}
  */
 function formatDescription(text, insertDot) {
-  if (!text) return ''
   text = text.trim()
+  if (!text) return ''
   text = text.replace(/\s\s+/g, ' ')                       // Avoid multiple spaces
   text = text.replace(/\n/g, ' ')                          // Make single line
   if (insertDot) text = text.replace(/(\w)(?=$)/g, '$1.')  // Insert dot if needed
@@ -127,7 +129,7 @@ function jsdocParser(text, parsers, options) {
           }
         }
 
-        if (['description', 'param', 'return', 'todo'].includes(tag.title))
+        if (tag.description && ['description', 'param', 'return', 'todo'].includes(tag.title))
           tag.description = formatDescription(tag.description, options.jsdocAddDotToDescription)
 
         if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title) &&
@@ -247,7 +249,7 @@ module.exports = {
     jsdocAddDotToDescription: {
       type: 'boolean',
       category: 'Global',
-      default: true,
+      default: false,
       description: 'Punctuation, is: a. key?'
     },
     jsdocDescriptionTag: {
