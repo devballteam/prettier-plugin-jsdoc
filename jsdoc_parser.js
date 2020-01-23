@@ -98,16 +98,19 @@ function jsdocParser(text, parsers, options) {
         if (tag.type) {
           // Figure out tag.type.name
           if (!tag.type.name) {
+            const typeNameMap = {
+              'UndefinedLiteral': 'undefined',
+              'NullLiteral': 'null',
+            }
+            if (Object.keys(typeNameMap).includes(tag.type.type)) {
+              tag.type.name = typeNameMap[tag.type.type]
+            }
             if (tag.type.expression) {
               tag.type.name = tag.type.expression.name
               tag.type.elements = tag.type.expression.elements
             }
             if (tag.type.elements) {
               tag.type.name = tag.type.elements.map(e => {
-                const typeNameMap = {
-                  'UndefinedLiteral': 'undefined',
-                  'NullLiteral': 'null',
-                }
                 return typeNameMap[e.type] || e.name || 'undefined'
               }).join('|')
             }
@@ -127,7 +130,8 @@ function jsdocParser(text, parsers, options) {
         if (['description', 'param', 'return', 'todo'].includes(tag.title))
           tag.description = formatDescription(tag.description, options.jsdocAddDotToDescription)
 
-        if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title))
+        if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title) &&
+          (!tag.type || !['Undefined', 'undefined', 'Null', 'null', 'Void', 'void'].includes(tag.type.name)))
           tag.description = formatDescription('TODO', options.jsdocAddDotToDescription)
 
         return tag

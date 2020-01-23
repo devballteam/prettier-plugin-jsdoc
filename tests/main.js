@@ -127,4 +127,34 @@ test('Should add empty line after @description and @example description if neces
   expect(Result3).toEqual(Expected3)
 })
 
+test('Should add TODO for return desc if it has undefined|null|void type', () => {
+  const Result1 = subject(`/**
+ * @returns {undefined}
+ */`)
+  const Expected1 = `/**
+ * @return {undefined}
+ */
+`
+
+  const Result2 = subject(`/**
+ * @returns {null}
+ */`)
+  const Expected2 = `/**
+ * @return {null}
+ */
+`
+
+  const Result3 = subject(`/**
+ * @returns {void}
+ */`)
+  const Expected3 = `/**
+ * @return {void}
+ */
+`
+
+  // expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+  expect(Result3).toEqual(Expected3)
+})
+
 test.todo('spaces option')
