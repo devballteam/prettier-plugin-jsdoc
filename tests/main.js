@@ -128,7 +128,7 @@ test('Should add empty line after @description and @example description if neces
   expect(Result3).toEqual(Expected3)
 })
 
-test('Should add TODO for return desc if it has undefined|null|void type', () => {
+test('Should not add TODO for return desc if it has undefined|null|void type', () => {
   const Result1 = subject(`/**
  * @returns {undefined}
  */`)
@@ -160,7 +160,7 @@ test('Should add TODO for return desc if it has undefined|null|void type', () =>
 
 
 
-test('Should align align vartically param|property|return|throws if option set tu true', () => {
+test('Should align align vartically param|property|return|throws if option set to true', () => {
   const options = {
     jsdocVerticalAlignment: true
   }
