@@ -160,7 +160,7 @@ test('Should not add TODO for return desc if it has undefined|null|void type', (
 
 
 
-test('Should align align vartically param|property|return|throws if option set to true', () => {
+test('Should align vartically param|property|return|throws if option set to true', () => {
   const options = {
     jsdocVerticalAlignment: true
   }
@@ -183,6 +183,52 @@ test('Should align align vartically param|property|return|throws if option set t
   const Expected2 = `/**
  * @throws {CustomExceptio} Unaligned throws description
  * @return {String}         Unaligned returns description
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+})
+
+test('Should align vartically param|property|return|throws if option set to true, and amount of spaces is different than default', () => {
+  const options1 = {
+    jsdocVerticalAlignment: true,
+    jsdocSpaces: 2
+  }
+  const unformattedJsdoc = `/**
+ * @property {Object} unalginedProp unaligned property descriptin
+ * @param {String} unalginedParam unaligned param description
+ * @throws {CustomExceptio} unaligned throws description
+ * @returns {undefined}
+ */`
+  const Result1 = subject(unformattedJsdoc, options1)
+  const Expected1 = `/**
+ * @property  {Object}          unalginedProp   Unaligned property descriptin
+ * @throws    {CustomExceptio}                  Unaligned throws description
+ * @param     {String}          unalginedParam  Unaligned param description
+ * @return    {undefined}
+ */
+`
+
+  const options2 = {
+    jsdocVerticalAlignment: true,
+    jsdocSpaces: 4
+  }
+  const Result2 = subject(`/**
+ * @property {Object} unalginedProp unaligned property descriptin
+ * @param {String} unalginedParam unaligned param description
+ * @throws {CustomExceptio} unaligned throws description
+ * @returns {String} unaligned returns description
+ */`, options2)
+  const Expected2 = `/**
+ * @property    {Object}            unalginedProp     Unaligned property
+ *                                                    descriptin
+ * @throws      {CustomExceptio}                      Unaligned throws
+ *                                                    description
+ * @param       {String}            unalginedParam    Unaligned param
+ *                                                    description
+ * @return      {String}                              Unaligned returns
+ *                                                    description
  */
 `
 

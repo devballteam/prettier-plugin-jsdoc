@@ -284,19 +284,19 @@ module.exports = {
     },
     jsdocDescriptionWithDot: {
       type: 'boolean',
-      category: 'Global',
+      category: 'jsdoc',
       default: false,
       description: 'Should dot be inserted at the end of description'
     },
     jsdocDescriptionTag: {
       type: 'boolean',
-      category: 'Global',
+      category: 'jsdoc',
       default: true,
       description: 'Should description tag be used',
     },
     jsdocVerticalAlignment: {
       type: 'boolean',
-      category: 'Global',
+      category: 'jsdoc',
       default: false,
       description: 'Should tags, types, names and description be aligned',
     }
