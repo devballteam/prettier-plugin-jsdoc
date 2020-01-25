@@ -38,17 +38,28 @@ const tagSynonyms = {
   'params'       : 'param',
 }
 
+const vertiacallyAlignableTags = [
+  'param',
+  'property',
+  'return',
+  'throws',
+  // 'yields',
+]
+
 /**
- * Trim, make single line with capitalized text
+ * Trim, make single line with capitalized text. Insert dot if flag for it is
+ * set to true and last character is a word character
  * @param {String} text
+ * @param {Boolean} insertDot flag for dot at the end of text
  * @return {String}
  */
-function formatDescription(text) {
+function formatDescription(text, insertDot) {
   text = text ? text.trim() : ''
   if (!text) return ''
-  text = text.replace(/\s\s+/g, ' ')             // Avoid multiple spaces
-  text = text.replace(/\n/g, ' ')                // Make single line
-  text = text[0].toUpperCase() + text.slice(1)   // Capitalize
+  text = text.replace(/\s\s+/g, ' ')                       // Avoid multiple spaces
+  text = text.replace(/\n/g, ' ')                          // Make single line
+  if (insertDot) text = text.replace(/(\w)(?=$)/g, '$1.')  // Insert dot if needed
+  text = text[0].toUpperCase() + text.slice(1)             // Capitalize
   return text || ''
 }
 
@@ -87,6 +98,10 @@ function jsdocParser(text, parsers, options) {
     if (parsed.description && !parsed.tags.find(t => t.title.toLowerCase() === 'description'))
       parsed.tags.push({ title: 'description', description: parsed.description })
 
+    let maxTagTitleLength = 0
+    let maxTagTypeNameLength = 0
+    let maxTagNameLength = 0
+
     parsed.tags
 
       // Prepare tags data
@@ -94,23 +109,32 @@ function jsdocParser(text, parsers, options) {
         tag.title = tag.title.trim().toLowerCase()
         tag.title = tagSynonyms[tag.title] || tag.title
 
+        if (vertiacallyAlignableTags.includes(tag.title))
+          maxTagTitleLength = Math.max(maxTagTitleLength, tag.title.length)
+
         if (tag.type) {
           // Figure out tag.type.name
           if (!tag.type.name) {
+            const typeNameMap = {
+              'UndefinedLiteral': 'undefined',
+              'NullLiteral': 'null',
+            }
+            if (Object.keys(typeNameMap).includes(tag.type.type)) {
+              tag.type.name = typeNameMap[tag.type.type]
+            }
             if (tag.type.expression) {
               tag.type.name = tag.type.expression.name
               tag.type.elements = tag.type.expression.elements
             }
             if (tag.type.elements) {
               tag.type.name = tag.type.elements.map(e => {
-                const typeNameMap = {
-                  'UndefinedLiteral': 'undefined',
-                  'NullLiteral': 'null',
-                }
                 return typeNameMap[e.type] || e.name || 'undefined'
               }).join('|')
             }
           }
+
+          if (vertiacallyAlignableTags.includes(tag.title))
+            maxTagTypeNameLength = Math.max(maxTagTypeNameLength, tag.type.name.length)
 
           // Additional operations on tag.name
           if (tag.name) {
@@ -120,14 +144,17 @@ function jsdocParser(text, parsers, options) {
 
             // Optional tag name
             if (tag.type.type === 'OptionalType') tag.name = `[${tag.name}]`
+            if (vertiacallyAlignableTags.includes(tag.title))
+              maxTagNameLength = Math.max(maxTagNameLength, tag.name.length)
           }
         }
 
-        if (['description', 'param', 'return', 'todo'].includes(tag.title))
-          tag.description = formatDescription(tag.description)
+        if (['description', 'param', 'property', 'return', 'yields', 'throws', 'todo'].includes(tag.title))
+          tag.description = formatDescription(tag.description, options.jsdocDescriptionWithDot)
 
-        if (!tag.description && ['description', 'param', 'return', 'todo', 'memberof'].includes(tag.title))
-          tag.description = 'TODO'
+        if (!tag.description && ['description', 'param', 'property', 'return', 'yields', 'throws', 'todo', 'memberof'].includes(tag.title) &&
+          (!tag.type || !['Undefined', 'undefined', 'Null', 'null', 'Void', 'void'].includes(tag.type.name)))
+          tag.description = formatDescription('TODO', options.jsdocDescriptionWithDot)
 
         return tag
       })
@@ -137,15 +164,32 @@ function jsdocParser(text, parsers, options) {
 
       // Create final jsDoc string
       .forEach((tag, tagIndex) => {
-        let tagString = ` * @${tag.title}`
+        let tagTitleGapAdj = 0
+        let tagTypeGapAdj = 0
+        let tagNameGapAdj = 0
+        let descGapAdj = 0
 
-        if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}`
-        if (tag.name) tagString += gap + tag.name
+        if (options.jsdocVerticalAlignment && vertiacallyAlignableTags.includes(tag.title)) {
+          if (tag.title) tagTitleGapAdj += maxTagTitleLength - tag.title.length
+          else if (maxTagTitleLength) descGapAdj += maxTagTitleLength + gap.length
+
+          if (tag.type && tag.type.name) tagTypeGapAdj += maxTagTypeNameLength - tag.type.name.length
+          else if (maxTagTypeNameLength) descGapAdj += maxTagTypeNameLength + gap.length
+
+          if (tag.name) tagNameGapAdj +=  maxTagNameLength - tag.name.length
+          else if (maxTagNameLength) descGapAdj = maxTagNameLength + gap.length
+        }
+
+        let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag) 
+        let tagString = ` * `
+
+        if (useTagTitle) tagString += `@${tag.title}` + ' '.repeat(tagTitleGapAdj)
+        if (tag.type && tag.type.name) tagString += gap + `{${tag.type.name}}` + ' '.repeat(tagTypeGapAdj)
+        if (tag.name) tagString += gap + tag.name + ' '.repeat(tagNameGapAdj)
 
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
-          tagString += gap
-
+          if (useTagTitle) tagString += gap + ' '.repeat(descGapAdj)
           if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
             tagString += tag.description
           } else { // Wrap tag description
@@ -237,10 +281,31 @@ module.exports = {
         'return',
       ]}],
       description: 'Define order of tags.',
+    },
+    jsdocDescriptionWithDot: {
+      type: 'boolean',
+      category: 'jsdoc',
+      default: false,
+      description: 'Should dot be inserted at the end of description'
+    },
+    jsdocDescriptionTag: {
+      type: 'boolean',
+      category: 'jsdoc',
+      default: true,
+      description: 'Should description tag be used',
+    },
+    jsdocVerticalAlignment: {
+      type: 'boolean',
+      category: 'jsdoc',
+      default: false,
+      description: 'Should tags, types, names and description be aligned',
     }
   },
   defaultOptions: {
     jsdocSpaces: 1,
     jsdocPrintWidth: 80,
+    jsdocDescriptionWithDot: false,
+    jsdocDescriptionTag: true,
+    jsdocVerticalAlignment: false,
   }
 }
