@@ -236,3 +236,20 @@ opcje też działają.
 pon, 20 sty 2020, 14:16:12 CET
 
 DZIAŁAJĄ!!!  Super to commit i można podpinać pod projekt i Emacsa.
+
+pią, 24 sty 2020, 15:28:30 CET
+
+Plugin chodzi pięknie na projekcie w firmie od kilku dni.  Nie obyło
+się bez kilku poprawek podczas wdrażania.  Dzięki temu plugin działa
+coraz lepiej.  Doczekałem się już pierwszego pomocnika.  W pierwszym
+PR dodał bardzo fajne rzeczy.
+
+W planach jest też mała poprawka do parsera "Doctrine".  Niestety
+przez to, że jest od dawna nie rozwijany to nie wspiera wszystkiego co
+by nas interesowało.  Dlatego nie obędzie się bez forka.  Zajrzałem
+już do kodu i wygląda na to, że poprawka będzie szybko i prosta.
+
+sob, 25 sty 2020, 09:05:37 CET
+
+Udało się zrobić forka, poprawkę i nawet dopisać nowe testy projektu
+Doctrine.  Teraz mamy wsparcie dla tagu @yields.

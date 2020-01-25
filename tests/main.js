@@ -269,26 +269,51 @@ test('Should insert proper amount of spaces based on option', () => {
   expect(Result2).toEqual(Expected2)
 })
 
-test.skip('yields is broken', () => {
-  /*
-   * it will not be aligned prperly as doctrine seems to have problems with 
-   * type here. Result of parse is:
-   * { title: 'yields', description: '{Number} return description' }
-   * and jsDoc does support type in this field:
-   * https://jsdoc.app/tags-yields.html
-   * As doctrine is not maitained at the moment solution here is either to fork
-   * it and fix it or search for other parser
-   */
-  const options1 = {
-    jsdocSpaces: 2
+test('yields should work like return tag', () => {
+  const options = {
+    jsdocSpaces: 3
   }
   const Result1 = subject(`/**
- * @yields {Number} return description
- */`, options1)
+ * @yields {Number} yields description
+ */`, options)
   const Expected1 = `/**
- * @yields  {Number}  Return description
+ * @yields   {Number}   Yields description
+ */
+`
+  const Result2 = subject(`/**
+ * @yield {Number} yields description
+ */`, options)
+  const Expected2 = `/**
+ * @yields   {Number}   Yields description
+ */
+`
+
+  const Result3 = subject(`/**
+ * @yield {Number}
+ */`, options)
+  const Expected3 = `/**
+ * @yields   {Number}   TODO
+ */
+`
+
+  const Result4 = subject(`/**
+ * @yield yelds description
+ */`, options)
+  const Expected4 = `/**
+ * @yields   Yelds description
+ */
+`
+
+  const Result5 = subject(`/**
+ * @yield
+ */`, options)
+  const Expected5 = `/**
  */
 `
 
   expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+  expect(Result3).toEqual(Expected3)
+  expect(Result4).toEqual(Expected4)
+  expect(Result5).toEqual(Expected5)
 })

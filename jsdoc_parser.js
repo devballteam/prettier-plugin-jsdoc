@@ -180,7 +180,7 @@ function jsdocParser(text, parsers, options) {
           else if (maxTagNameLength) descGapAdj = maxTagNameLength + gap.length
         }
 
-        let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag) 
+        let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag)
         let tagString = ` * `
 
         if (useTagTitle) tagString += `@${tag.title}` + ' '.repeat(tagTitleGapAdj)
@@ -278,6 +278,7 @@ module.exports = {
         'examples',
         'other',
         'param',
+        'yields',
         'return',
       ]}],
       description: 'Define order of tags.',
