@@ -43,7 +43,7 @@ const vertiacallyAlignableTags = [
   'property',
   'return',
   'throws',
-  // 'yields',
+  'yields',
 ]
 
 /**
@@ -278,6 +278,7 @@ module.exports = {
         'examples',
         'other',
         'param',
+        'throws',
         'yields',
         'return',
       ]}],
