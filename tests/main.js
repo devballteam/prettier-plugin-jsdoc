@@ -204,8 +204,8 @@ test('Should align vartically param|property|return|throws if option set to true
   const Result1 = subject(unformattedJsdoc, options1)
   const Expected1 = `/**
  * @property  {Object}          unalginedProp   Unaligned property descriptin
- * @throws    {CustomExceptio}                  Unaligned throws description
  * @param     {String}          unalginedParam  Unaligned param description
+ * @throws    {CustomExceptio}                  Unaligned throws description
  * @return    {undefined}
  */
 `
@@ -223,9 +223,9 @@ test('Should align vartically param|property|return|throws if option set to true
   const Expected2 = `/**
  * @property    {Object}            unalginedProp     Unaligned property
  *                                                    descriptin
- * @throws      {CustomExceptio}                      Unaligned throws
- *                                                    description
  * @param       {String}            unalginedParam    Unaligned param
+ *                                                    description
+ * @throws      {CustomExceptio}                      Unaligned throws
  *                                                    description
  * @return      {String}                              Unaligned returns
  *                                                    description

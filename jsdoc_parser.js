@@ -279,6 +279,7 @@ module.exports = {
         'other',
         'param',
         'yields',
+        'throws',
         'return',
       ]}],
       description: 'Define order of tags.',
