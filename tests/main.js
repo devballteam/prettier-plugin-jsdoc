@@ -160,28 +160,32 @@ test('Should not add TODO for return desc if it has undefined|null|void type', (
 
 
 
-test('Should align vartically param|property|return|throws if option set to true', () => {
+test('Should align vertically param|property|return|yields|throws if option set to true', () => {
   const options = {
     jsdocVerticalAlignment: true
   }
   const Result1 = subject(`/**
  * @property {Object} unalginedProp unaligned property descriptin
  * @param {String} unalginedParam unaligned param description
+ * @yields {Number} yields description
  * @returns {undefined}
  */`, options)
   const Expected1 = `/**
  * @property {Object}    unalginedProp  Unaligned property descriptin
  * @param    {String}    unalginedParam Unaligned param description
+ * @yields   {Number}                   Yields description
  * @return   {undefined}
  */
 `
 
   const Result2 = subject(`/**
  * @throws {CustomExceptio} unaligned throws description
+ * @yields {Number} yields description
  * @returns {String} unaligned returns description
  */`, options)
   const Expected2 = `/**
  * @throws {CustomExceptio} Unaligned throws description
+ * @yields {Number}         Yields description
  * @return {String}         Unaligned returns description
  */
 `
@@ -190,7 +194,7 @@ test('Should align vartically param|property|return|throws if option set to true
   expect(Result2).toEqual(Expected2)
 })
 
-test('Should align vartically param|property|return|throws if option set to true, and amount of spaces is different than default', () => {
+test('Should align vertically param|property|return|yields|throws if option set to true, and amount of spaces is different than default', () => {
   const options1 = {
     jsdocVerticalAlignment: true,
     jsdocSpaces: 2
@@ -199,6 +203,7 @@ test('Should align vartically param|property|return|throws if option set to true
  * @property {Object} unalginedProp unaligned property descriptin
  * @param {String} unalginedParam unaligned param description
  * @throws {CustomExceptio} unaligned throws description
+ * @yields {Number} yields description
  * @returns {undefined}
  */`
   const Result1 = subject(unformattedJsdoc, options1)
@@ -206,6 +211,7 @@ test('Should align vartically param|property|return|throws if option set to true
  * @property  {Object}          unalginedProp   Unaligned property descriptin
  * @param     {String}          unalginedParam  Unaligned param description
  * @throws    {CustomExceptio}                  Unaligned throws description
+ * @yields    {Number}                          Yields description
  * @return    {undefined}
  */
 `
@@ -218,6 +224,7 @@ test('Should align vartically param|property|return|throws if option set to true
  * @property {Object} unalginedProp unaligned property descriptin
  * @param {String} unalginedParam unaligned param description
  * @throws {CustomExceptio} unaligned throws description
+ * @yields {Number} yields description
  * @returns {String} unaligned returns description
  */`, options2)
   const Expected2 = `/**
@@ -227,6 +234,7 @@ test('Should align vartically param|property|return|throws if option set to true
  *                                                    description
  * @throws      {CustomExceptio}                      Unaligned throws
  *                                                    description
+ * @yields      {Number}                              Yields description
  * @return      {String}                              Unaligned returns
  *                                                    description
  */

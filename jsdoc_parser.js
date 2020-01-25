@@ -43,7 +43,7 @@ const vertiacallyAlignableTags = [
   'property',
   'return',
   'throws',
-  // 'yields',
+  'yields',
 ]
 
 /**
@@ -278,8 +278,8 @@ module.exports = {
         'examples',
         'other',
         'param',
-        'yields',
         'throws',
+        'yields',
         'return',
       ]}],
       description: 'Define order of tags.',
