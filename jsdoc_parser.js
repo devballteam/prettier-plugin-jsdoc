@@ -125,6 +125,17 @@ function jsdocParser(text, parsers, options) {
             if (tag.type.expression) {
               tag.type.name = tag.type.expression.name
               tag.type.elements = tag.type.expression.elements
+
+              if (tag.type.applications) {
+                let { type: { applications: [{ type, name, elements }] }} = tag
+
+                tag.type.name += '.<'
+                if (name) tag.type.name += Object.keys(typeNameMap).includes(type) ? typeNameMap[type] : name
+                if (elements) tag.type.name += elements
+                  .map(({ type: t, name: n }) => Object.keys(typeNameMap).includes(t) ? typeNameMap[t] : n)
+                  .join('|')
+                tag.type.name += '>'
+              }
             }
             if (tag.type.elements) {
               tag.type.name = tag.type.elements.map(e => {

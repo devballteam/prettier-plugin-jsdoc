@@ -158,7 +158,53 @@ test('Should not add TODO for return desc if it has undefined|null|void type', (
   expect(Result3).toEqual(Expected3)
 })
 
+test('Should keep defined inner types', () => {
+  const Result1 = subject(`/**
+ * @param {String[]} test test param
+ */`)
+  const Expected1 = `/**
+ * @param {Array.<String>} test Test param
+ */
+`
 
+  const Result2 = subject(`/**
+ * @param {Array.<String>} test Test param
+ */`)
+  const Expected2 = `/**
+ * @param {Array.<String>} test Test param
+ */
+`
+
+  const Result3 = subject(`/**
+ * @param {Array.<String|Object>} test Test param
+ */`)
+  const Expected3 = `/**
+ * @param {Array.<String|Object>} test Test param
+ */
+`
+
+  const Result4 = subject(`/**
+ * @return {Promise.<Number|String|undefined>} test promise
+ */`)
+  const Expected4 = `/**
+ * @return {Promise.<Number|String|undefined>} Test promise
+ */
+`
+
+  const Result5 = subject(`/**
+ * @return {Object.<Number|String|undefined>} test object
+ */`)
+  const Expected5 = `/**
+ * @return {Object.<Number|String|undefined>} Test object
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+  expect(Result3).toEqual(Expected3)
+  expect(Result4).toEqual(Expected4)
+  expect(Result5).toEqual(Expected5)
+})
 
 test('Should align vertically param|property|return|yields|throws if option set to true', () => {
   const options = {
