@@ -206,6 +206,51 @@ test('Should keep defined inner types', () => {
   expect(Result5).toEqual(Expected5)
 })
 
+test('Sould keep complex inner types', () => {
+  const Result1 = subject(`/**
+ * @param {(String|Number)[]} test test param
+ * @param {Object.<String, Number>[]} test test param
+ * @param {...Number} test Test param
+ * @param {?Number} test Test param
+ * @param {?undefined} test Test param
+ * @param {!Number} test Test param
+ * @param {Number} test Test param
+ * @param {Number|String} test Test param
+ * @param {undefined} test Test param
+ * @param {*} test Test param
+ */`)
+  const Expected1 = `/**
+ * @param {Array.<String|Number>} test Test param
+ * @param {Array.<Object.<String, Number>>} test Test param
+ * @param {...Number} test Test param
+ * @param {?Number} test Test param
+ * @param {?undefined} test Test param
+ * @param {!Number} test Test param
+ * @param {Number} test Test param
+ * @param {Number|String} test Test param
+ * @param {undefined} test Test param
+ * @param {*} test Test param
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+})
+
+test('Should add parentheses to union type if option set to true', () => {
+  const options = {
+    jsdocUnionTypeParentheses: true,
+  }
+  const Result1 = subject(`/**
+ * @param {Number|String} test Test param
+ */`, options)
+  const Expected1 = `/**
+ * @param {(Number|String)} test Test param
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+})
+
 test('Should align vertically param|property|return|yields|throws if option set to true', () => {
   const options = {
     jsdocVerticalAlignment: true
