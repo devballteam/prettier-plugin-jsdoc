@@ -249,7 +249,8 @@ function jsdocParser(text, parsers, options) {
             tagString += formatedDescription.replace(/(^|\n)/g, '\n *   ')
             tagString = tagString.slice(0, tagString.length - 6)
           } catch (err) {
-            tagString += '\n' + tag.description.split('\n').map(l => ' *   ' + l.trim()).join('\n')
+            tagString += '\n' + tag.description
+              .split('\n').map(l => ` *   ${options.jsdocKeepUnparseableExampleIndent ? l : l.trim()}`).join('\n')
           }
         }
 
@@ -338,6 +339,11 @@ module.exports = {
       category: 'jsdoc',
       default: false,
       description: 'Should union type be enclosed in parentheses'
+    jsdocKeepUnparseableExampleIndent: {
+      type: 'boolean',
+      category: 'jsdoc',
+      default: false,
+      description: 'Should unparseable esample (pseudo code or no js code) keep its indentation',
     }
   },
   defaultOptions: {
@@ -347,5 +353,6 @@ module.exports = {
     jsdocDescriptionTag: true,
     jsdocVerticalAlignment: false,
     jsdocUnionTypeParentheses: false,
+    jsdocKeepUnparseableExampleIndent: false,
   }
 }
