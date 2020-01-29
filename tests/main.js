@@ -325,3 +325,132 @@ test('yields should work like return tag', () => {
   expect(Result4).toEqual(Expected4)
   expect(Result5).toEqual(Expected5)
 })
+
+test('should trim whitespace on unparseable examples - default options', () => {
+  const Result1 = subject(`/**
+ * @example
+ * {
+ *   testArr: [
+ *     1,
+ *     2,
+ *     ...
+ *   ]
+ * }
+ */`)
+  const Expected1 = `/**
+ * @example
+ *   {
+ *   testArr: [
+ *   1,
+ *   2,
+ *   ...
+ *   ]
+ *   }
+ */
+`
+
+  const Result2 = subject(`/**
+ * @example
+ * // sample call:
+ * foo(bar)
+ *
+ * // result
+ * [{
+ *   foo: 1,
+ *   foo: 2,
+ *   ...,
+ *   foo: 9,
+ * }, {
+ *   bar: 1,
+ *   ...,
+ *   bar: 5
+ * }]
+ */`)
+  const Expected2 = `/**
+ * @example
+ *   // sample call:
+ *   foo(bar)
+ *
+ *   // result
+ *   [{
+ *   foo: 1,
+ *   foo: 2,
+ *   ...,
+ *   foo: 9,
+ *   }, {
+ *   bar: 1,
+ *   ...,
+ *   bar: 5
+ *   }]
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+})
+
+test('should keep indent on unparseable examples - if flag set to true', () => {
+  const options = {
+    jsdocKeepUnparseableExampleIndent: true,
+  }
+  const Result1 = subject(`/**
+ * @example
+ * {
+ *   testArr: [
+ *     1,
+ *     2,
+ *     ...
+ *   ]
+ * }
+ */`, options)
+  const Expected1 = `/**
+ * @example
+ *   {
+ *     testArr: [
+ *       1,
+ *       2,
+ *       ...
+ *     ]
+ *   }
+ */
+`
+
+  const Result2 = subject(`/**
+ * @example
+ * // sample call:
+ * foo(bar)
+ *
+ * // result
+ * [{
+ *   foo: 1,
+ *   foo: 2,
+ *   ...,
+ *   foo: 9,
+ * }, {
+ *   bar: 1,
+ *   ...,
+ *   bar: 5
+ * }]
+ */`, options)
+  const Expected2 = `/**
+ * @example
+ *   // sample call:
+ *   foo(bar)
+ *
+ *   // result
+ *   [{
+ *     foo: 1,
+ *     foo: 2,
+ *     ...,
+ *     foo: 9,
+ *   }, {
+ *     bar: 1,
+ *     ...,
+ *     bar: 5
+ *   }]
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+})
