@@ -338,7 +338,8 @@ module.exports = {
       type: 'boolean',
       category: 'jsdoc',
       default: false,
-      description: 'Should union type be enclosed in parentheses'
+      description: 'Should union type be enclosed in parentheses',
+    },
     jsdocKeepUnparseableExampleIndent: {
       type: 'boolean',
       category: 'jsdoc',
