@@ -158,7 +158,144 @@ test('Should not add TODO for return desc if it has undefined|null|void type', (
   expect(Result3).toEqual(Expected3)
 })
 
+test('Should keep defined inner types', () => {
+  const Result1 = subject(`/**
+ * @param {String[]} test test param
+ */`)
+  const Expected1 = `/**
+ * @param {Array.<String>} test Test param
+ */
+`
 
+  const Result2 = subject(`/**
+ * @param {Array.<String>} test Test param
+ */`)
+  const Expected2 = `/**
+ * @param {Array.<String>} test Test param
+ */
+`
+
+  const Result3 = subject(`/**
+ * @param {Array.<String|Object>} test Test param
+ */`)
+  const Expected3 = `/**
+ * @param {Array.<String|Object>} test Test param
+ */
+`
+
+  const Result4 = subject(`/**
+ * @return {Promise.<Number|String|undefined>} test promise
+ */`)
+  const Expected4 = `/**
+ * @return {Promise.<Number|String|undefined>} Test promise
+ */
+`
+
+  const Result5 = subject(`/**
+ * @return {Object.<Number|String|undefined>} test object
+ */`)
+  const Expected5 = `/**
+ * @return {Object.<Number|String|undefined>} Test object
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+  expect(Result3).toEqual(Expected3)
+  expect(Result4).toEqual(Expected4)
+  expect(Result5).toEqual(Expected5)
+})
+
+test.skip('Sould keep params ordering when more than 10 tags are present', () => {
+  // this is broken. seems to originate in sort. As a short investigation I've
+  // printed tags before and after sort and those are results:
+  // before = [{"title":"param","name":"test1","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test2","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test3","type":{"type":"UnionType","elements":[{"type":"NameExpression","name":"Number"},{"type":"NameExpression","name":"String"}],"name":"Number|String"}},{"title":"param","name":"test4","type":{"type":"NullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"?undefined"}},{"title":"param","name":"test5","type":{"type":"NonNullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"!undefined"}},{"title":"param","name":"test6","type":{"type":"AllLiteral","name":"*"}},{"title":"param","name":"test7","type":{"type":"NullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"?Number"}},{"title":"param","name":"test8","type":{"type":"RestType","expression":{"type":"NameExpression","name":"Number"},"name":"...Number"}},{"title":"param","name":"test9","type":{"type":"NonNullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"!Number"}},{"title":"return","type":{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Promise"},"applications":[{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Object"},"applications":[{"type":"NameExpression","name":"string"},{"type":"UnionType","elements":[{"type":"NameExpression","name":"number"},{"type":"UndefinedLiteral"}]}]}],"name":"Promise.<Object.<string, number|undefined>>"}},{"title":"description"}]
+  // after = [{"title":"description"},{"title":"param","name":"test1","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test3","type":{"type":"UnionType","elements":[{"type":"NameExpression","name":"Number"},{"type":"NameExpression","name":"String"}],"name":"Number|String"}},{"title":"param","name":"test4","type":{"type":"NullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"?undefined"}},{"title":"param","name":"test5","type":{"type":"NonNullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"!undefined"}},{"title":"param","name":"test2","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test7","type":{"type":"NullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"?Number"}},{"title":"param","name":"test8","type":{"type":"RestType","expression":{"type":"NameExpression","name":"Number"},"name":"...Number"}},{"title":"param","name":"test9","type":{"type":"NonNullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"!Number"}},{"title":"param","name":"test6","type":{"type":"AllLiteral","name":"*"}},{"title":"return","type":{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Promise"},"applications":[{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Object"},"applications":[{"type":"NameExpression","name":"string"},{"type":"UnionType","elements":[{"type":"NameExpression","name":"number"},{"type":"UndefinedLiteral"}]}]}],"name":"Promise.<Object.<string, number|undefined>>"}}]
+  const Result1 = subject(`/**
+ * description
+ * @param {Number} test1 Test param
+ * @param {Number} test2 Test param
+ * @param {Number|String} test3 Test param
+ * @param {?undefined} test4 Test param
+ * @param {!undefined} test5 Test param
+ * @param {*} test6 Test param
+ * @param {?Number} test7 Test param
+ * @param {...Number} test8 Test param
+ * @param {!Number} test9 Test param
+ * @return {Promise<Object<string, number|undefined>>} test return
+ */`)
+  const Expected1 = `/**
+ * @description Description
+ *
+ * @param {Number} test1 Test param
+ * @param {Number} test2 Test param
+ * @param {Number|String} test3 Test param
+ * @param {?undefined} test4 Test param
+ * @param {!undefined} test5 Test param
+ * @param {*} test6 Test param
+ * @param {?Number} test7 Test param
+ * @param {...Number} test8 Test param
+ * @param {!Number} test9 Test param
+ * @return {Promise.<Object.<string, number|undefined>>} Test return
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+})
+
+test('Sould keep complex inner types', () => {
+  const Result1 = subject(`/**
+ * @param {(String|Number)[]} test test param
+ * @param {Object.<String, Number>[]} test test param
+ * @param {...Number} test Test param
+ * @param {?Number} test Test param
+ * @param {?undefined} test Test param
+ * @param {!Number} test Test param
+ * @param {Number} test Test param
+ * @param {Number|String} test Test param
+ * @param {undefined} test Test param
+ * @param {*} test Test param
+ */`)
+  const Expected1 = `/**
+ * @param {Array.<String|Number>} test Test param
+ * @param {Array.<Object.<String, Number>>} test Test param
+ * @param {...Number} test Test param
+ * @param {?Number} test Test param
+ * @param {?undefined} test Test param
+ * @param {!Number} test Test param
+ * @param {Number} test Test param
+ * @param {Number|String} test Test param
+ * @param {undefined} test Test param
+ * @param {*} test Test param
+ */
+`
+
+  const Result2 = subject(`/**
+ * @return {Promise<Object<string, number|undefined>>} test return
+ */`)
+  const Expected2 = `/**
+ * @return {Promise.<Object.<string, number|undefined>>} Test return
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+  expect(Result2).toEqual(Expected2)
+})
+
+test('Should add parentheses to union type if option set to true', () => {
+  const options = {
+    jsdocUnionTypeParentheses: true,
+  }
+  const Result1 = subject(`/**
+ * @param {Number|String} test Test param
+ */`, options)
+  const Expected1 = `/**
+ * @param {(Number|String)} test Test param
+ */
+`
+
+  expect(Result1).toEqual(Expected1)
+})
 
 test('Should align vertically param|property|return|yields|throws if option set to true', () => {
   const options = {

@@ -46,6 +46,54 @@ const vertiacallyAlignableTags = [
   'yields',
 ]
 
+const typePrefixMap = {
+  'NullableType': '?',
+  'NonNullableType': '!',
+}
+
+/**
+ * Return properly formatted tag type name. Call itself recursively for complex
+ * inner types
+ *
+ * @param {Object} tagType Tag type object from parsed jsdoc
+ * @param {Boolean} unionTypeParentheses flag for parentheses around union type
+ * @returns {String} Formatted tag type
+ */
+function getTagTypeName(tagType, unionTypeParentheses) {
+  let { name } = tagType
+
+  if (name) return name
+  
+  let { type, expression, applications, elements, prefix } = tagType
+
+  switch (type) {
+    case 'UndefinedLiteral':
+      return 'undefined'
+    case 'NullLiteral':
+      return 'null'
+    case 'AllLiteral':
+      return '*'
+    case 'RestType':
+      return `...${getTagTypeName(expression)}`
+    case 'NullableType':
+    case 'NonNullableType':
+      return `${prefix ? typePrefixMap[type] : ''}${getTagTypeName(expression)}`
+    case 'TypeApplication':
+      return `${getTagTypeName(expression)}.<${applications.map(a => getTagTypeName(a)).join(', ')}>`
+    case 'OptionalType':
+      return getTagTypeName(expression)
+    case 'UnionType':
+      return `${
+        unionTypeParentheses ? '(' : ''
+      }${elements.map(e => getTagTypeName(e)).join('|')}${
+        unionTypeParentheses ? ')' : ''
+      }`
+    default:
+      return ''
+  }
+}
+
+
 /**
  * Trim, make single line with capitalized text. Insert dot if flag for it is
  * set to true and last character is a word character
@@ -114,24 +162,7 @@ function jsdocParser(text, parsers, options) {
 
         if (tag.type) {
           // Figure out tag.type.name
-          if (!tag.type.name) {
-            const typeNameMap = {
-              'UndefinedLiteral': 'undefined',
-              'NullLiteral': 'null',
-            }
-            if (Object.keys(typeNameMap).includes(tag.type.type)) {
-              tag.type.name = typeNameMap[tag.type.type]
-            }
-            if (tag.type.expression) {
-              tag.type.name = tag.type.expression.name
-              tag.type.elements = tag.type.expression.elements
-            }
-            if (tag.type.elements) {
-              tag.type.name = tag.type.elements.map(e => {
-                return typeNameMap[e.type] || e.name || 'undefined'
-              }).join('|')
-            }
-          }
+          tag.type.name = getTagTypeName(tag.type, options.jsdocUnionTypeParentheses)
 
           if (vertiacallyAlignableTags.includes(tag.title))
             maxTagTypeNameLength = Math.max(maxTagTypeNameLength, tag.type.name.length)
@@ -303,6 +334,11 @@ module.exports = {
       default: false,
       description: 'Should tags, types, names and description be aligned',
     },
+    jsdocUnionTypeParentheses: {
+      type: 'boolean',
+      category: 'jsdoc',
+      default: false,
+      description: 'Should union type be enclosed in parentheses'
     jsdocKeepUnparseableExampleIndent: {
       type: 'boolean',
       category: 'jsdoc',
@@ -316,6 +352,7 @@ module.exports = {
     jsdocDescriptionWithDot: false,
     jsdocDescriptionTag: true,
     jsdocVerticalAlignment: false,
+    jsdocUnionTypeParentheses: false,
     jsdocKeepUnparseableExampleIndent: false,
   }
 }
