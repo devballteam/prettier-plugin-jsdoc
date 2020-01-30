@@ -4,7 +4,8 @@
   "description": "",
   "main": "jsdoc_parser.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prettier": "prettier --write \"**/*.js\""
   },
   "keywords": [
     "prettier",

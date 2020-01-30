@@ -253,3 +253,12 @@ sob, 25 sty 2020, 09:05:37 CET
 
 Udało się zrobić forka, poprawkę i nawet dopisać nowe testy projektu
 Doctrine.  Teraz mamy wsparcie dla tagu @yields.
+
+czw, 30 sty 2020, 15:13:00 CET
+
+Kolejne dwa fajne PR od Wiktora.  Wreszcie mam też trochę czasu żeby
+zająć się tematami wypisanymi w README.
+
+czw, 30 sty 2020, 15:53:28 CET
+
+Mergowałem PR.  Dodałem prettiera do tego projektu.

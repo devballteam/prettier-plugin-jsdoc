@@ -7,25 +7,25 @@ const tagSynonyms = {
   // to avoid different titles in the same tag so here is map with
   // synonyms as keys and tag type as value that we want to have in
   // final jsDoc.
-  'virtual'      : 'abstract',
-  'extends'      : 'augments',
-  'constructor'  : 'class',
-  'const'        : 'constant',
-  'defaultvalue' : 'default',
-  'desc'         : 'description',
-  'host'         : 'external',
-  'fileoverview' : 'file',
-  'overview'     : 'file',
-  'emits'        : 'fires',
-  'func'         : 'function',
-  'method'       : 'function',
-  'var'          : 'member',
-  'arg'          : 'param',
-  'argument'     : 'param',
-  'prop'         : 'property',
-  'returns'      : 'return',
-  'exception'    : 'throws',
-  'yield'        : 'yields',
+  virtual: 'abstract',
+  extends: 'augments',
+  constructor: 'class',
+  const: 'constant',
+  defaultvalue: 'default',
+  desc: 'description',
+  host: 'external',
+  fileoverview: 'file',
+  overview: 'file',
+  emits: 'fires',
+  func: 'function',
+  method: 'function',
+  var: 'member',
+  arg: 'param',
+  argument: 'param',
+  prop: 'property',
+  returns: 'return',
+  exception: 'throws',
+  yield: 'yields',
 
   // {@link} (synonyms: {@linkcode}, {@linkplain})
   // TODO I'm not sure how @link is parsed.  I will have to look up
@@ -34,36 +34,30 @@ const tagSynonyms = {
 
   // It looks like sometimes someone use incorrect tag title.  Its
   // close to correct title but not quite.  We want to map that too.
-  'examples'     : 'example',
-  'params'       : 'param',
+  examples: 'example',
+  params: 'param',
 }
 
-const vertiacallyAlignableTags = [
-  'param',
-  'property',
-  'return',
-  'throws',
-  'yields',
-]
+const vertiacallyAlignableTags = ['param', 'property', 'return', 'throws', 'yields']
 
 const typePrefixMap = {
-  'NullableType': '?',
-  'NonNullableType': '!',
+  NullableType: '?',
+  NonNullableType: '!',
 }
 
 /**
  * Return properly formatted tag type name. Call itself recursively for complex
  * inner types
  *
- * @param {Object} tagType Tag type object from parsed jsdoc
- * @param {Boolean} unionTypeParentheses flag for parentheses around union type
- * @returns {String} Formatted tag type
+ * @param  {Object}  tagType              Tag type object from parsed jsdoc
+ * @param  {Boolean} unionTypeParentheses Flag for parentheses around union type
+ * @return {String}                       Formatted tag type
  */
 function getTagTypeName(tagType, unionTypeParentheses) {
   let { name } = tagType
 
   if (name) return name
-  
+
   let { type, expression, applications, elements, prefix } = tagType
 
   switch (type) {
@@ -83,9 +77,7 @@ function getTagTypeName(tagType, unionTypeParentheses) {
     case 'OptionalType':
       return getTagTypeName(expression)
     case 'UnionType':
-      return `${
-        unionTypeParentheses ? '(' : ''
-      }${elements.map(e => getTagTypeName(e)).join('|')}${
+      return `${unionTypeParentheses ? '(' : ''}${elements.map(e => getTagTypeName(e)).join('|')}${
         unionTypeParentheses ? ')' : ''
       }`
     default:
@@ -93,25 +85,27 @@ function getTagTypeName(tagType, unionTypeParentheses) {
   }
 }
 
-
 /**
  * Trim, make single line with capitalized text. Insert dot if flag for it is
  * set to true and last character is a word character
- * @param {String} text
- * @param {Boolean} insertDot flag for dot at the end of text
- * @return {String}
+ *
+ * @param  {String}  text      TODO
+ * @param  {Boolean} insertDot Flag for dot at the end of text
+ * @return {String}            TODO
  */
 function formatDescription(text, insertDot) {
   text = text ? text.trim() : ''
   if (!text) return ''
-  text = text.replace(/\s\s+/g, ' ')                       // Avoid multiple spaces
-  text = text.replace(/\n/g, ' ')                          // Make single line
-  if (insertDot) text = text.replace(/(\w)(?=$)/g, '$1.')  // Insert dot if needed
-  text = text[0].toUpperCase() + text.slice(1)             // Capitalize
+  text = text.replace(/\s\s+/g, ' ') // Avoid multiple spaces
+  text = text.replace(/\n/g, ' ') // Make single line
+  if (insertDot) text = text.replace(/(\w)(?=$)/g, '$1.') // Insert dot if needed
+  text = text[0].toUpperCase() + text.slice(1) // Capitalize
   return text || ''
 }
 
-/** {@link https://prettier.io/docs/en/api.html#custom-parser-api} */
+/**
+ * {@link https://prettier.io/docs/en/api.html#custom-parser-api}
+ */
 function jsdocParser(text, parsers, options) {
   const ast = parsers['babel-flow'](text)
 
@@ -120,13 +114,14 @@ function jsdocParser(text, parsers, options) {
   const printWidth = options.jsdocPrintWidth
 
   /**
-   * Control order of tags by weights.  Smaller value brings tag higher.
-   * @param {String} tagTitle
-   * @return {Number} Tag weight
+   * Control order of tags by weights. Smaller value brings tag higher.
+   *
+   * @param  {String} tagTitle TODO
+   * @return {Number}          Tag weight
    */
   function getTagOrderWeight(tagTitle) {
     const index = options.jsdocTagsOrder.indexOf(tagTitle)
-    return index === -1 ? (options.jsdocTagsOrder.indexOf('other') || 0) : index
+    return index === -1 ? options.jsdocTagsOrder.indexOf('other') || 0 : index
   }
 
   ast.comments.forEach(comment => {
@@ -183,8 +178,11 @@ function jsdocParser(text, parsers, options) {
         if (['description', 'param', 'property', 'return', 'yields', 'throws', 'todo'].includes(tag.title))
           tag.description = formatDescription(tag.description, options.jsdocDescriptionWithDot)
 
-        if (!tag.description && ['description', 'param', 'property', 'return', 'yields', 'throws', 'todo', 'memberof'].includes(tag.title) &&
-          (!tag.type || !['Undefined', 'undefined', 'Null', 'null', 'Void', 'void'].includes(tag.type.name)))
+        if (
+          !tag.description &&
+          ['description', 'param', 'property', 'return', 'yields', 'throws', 'todo', 'memberof'].includes(tag.title) &&
+          (!tag.type || !['Undefined', 'undefined', 'Null', 'null', 'Void', 'void'].includes(tag.type.name))
+        )
           tag.description = formatDescription('TODO', options.jsdocDescriptionWithDot)
 
         return tag
@@ -207,11 +205,11 @@ function jsdocParser(text, parsers, options) {
           if (tag.type && tag.type.name) tagTypeGapAdj += maxTagTypeNameLength - tag.type.name.length
           else if (maxTagTypeNameLength) descGapAdj += maxTagTypeNameLength + gap.length
 
-          if (tag.name) tagNameGapAdj +=  maxTagNameLength - tag.name.length
+          if (tag.name) tagNameGapAdj += maxTagNameLength - tag.name.length
           else if (maxTagNameLength) descGapAdj = maxTagNameLength + gap.length
         }
 
-        let useTagTitle = (tag.title !== 'description' || options.jsdocDescriptionTag)
+        let useTagTitle = tag.title !== 'description' || options.jsdocDescriptionTag
         let tagString = ` * `
 
         if (useTagTitle) tagString += `@${tag.title}` + ' '.repeat(tagTitleGapAdj)
@@ -221,9 +219,11 @@ function jsdocParser(text, parsers, options) {
         // Add description (complicated because of text wrap)
         if (tag.description && tag.title !== 'example') {
           if (useTagTitle) tagString += gap + ' '.repeat(descGapAdj)
-          if (['memberof', 'see'].includes(tag.title)) { // Avoid wrapping
+          if (['memberof', 'see'].includes(tag.title)) {
+            // Avoid wrapping
             tagString += tag.description
-          } else { // Wrap tag description
+          } else {
+            // Wrap tag description
             const marginLength = tagString.length
             let maxWidth = printWidth
             if (marginLength >= maxWidth) maxWidth = marginLength + 40
@@ -249,8 +249,11 @@ function jsdocParser(text, parsers, options) {
             tagString += formatedDescription.replace(/(^|\n)/g, '\n *   ')
             tagString = tagString.slice(0, tagString.length - 6)
           } catch (err) {
-            tagString += '\n' + tag.description
-              .split('\n').map(l => ` *   ${options.jsdocKeepUnparseableExampleIndent ? l : l.trim()}`).join('\n')
+            tagString += '\n'
+            tagString += tag.description
+              .split('\n')
+              .map(l => ` *   ${options.jsdocKeepUnparseableExampleIndent ? l : l.trim()}`)
+              .join('\n')
           }
         }
 
@@ -271,12 +274,14 @@ function jsdocParser(text, parsers, options) {
 
 // jsdoc-parser
 module.exports = {
-  languages: [{
-    name: 'JavaScript',
-    parsers: ['jsdoc-parser'],
-  }],
+  languages: [
+    {
+      name: 'JavaScript',
+      parsers: ['jsdoc-parser'],
+    },
+  ],
   parsers: {
-    'jsdoc-parser': Object.assign({}, babelFlow, { parse: jsdocParser })
+    'jsdoc-parser': Object.assign({}, babelFlow, { parse: jsdocParser }),
   },
   // How to define options: https://github.com/prettier/prettier/blob/master/src/cli/constant.js#L16
   // Issue with string type: https://github.com/prettier/prettier/issues/6151
@@ -297,30 +302,34 @@ module.exports = {
       type: 'path',
       category: 'jsdoc',
       array: true, // Fancy way to get option in array form
-      default: [{ value: [
-        'private',
-        'global',
-        'class',
-        'memberof',
-        'namespace',
-        'callback',
-        'description',
-        'see',
-        'todo',
-        'examples',
-        'other',
-        'param',
-        'throws',
-        'yields',
-        'return',
-      ]}],
+      default: [
+        {
+          value: [
+            'private',
+            'global',
+            'class',
+            'memberof',
+            'namespace',
+            'callback',
+            'description',
+            'see',
+            'todo',
+            'examples',
+            'other',
+            'param',
+            'throws',
+            'yields',
+            'return',
+          ],
+        },
+      ],
       description: 'Define order of tags.',
     },
     jsdocDescriptionWithDot: {
       type: 'boolean',
       category: 'jsdoc',
       default: false,
-      description: 'Should dot be inserted at the end of description'
+      description: 'Should dot be inserted at the end of description',
     },
     jsdocDescriptionTag: {
       type: 'boolean',
@@ -345,7 +354,7 @@ module.exports = {
       category: 'jsdoc',
       default: false,
       description: 'Should unparseable esample (pseudo code or no js code) keep its indentation',
-    }
+    },
   },
   defaultOptions: {
     jsdocSpaces: 1,
@@ -355,5 +364,5 @@ module.exports = {
     jsdocVerticalAlignment: false,
     jsdocUnionTypeParentheses: false,
     jsdocKeepUnparseableExampleIndent: false,
-  }
+  },
 }

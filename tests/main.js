@@ -9,8 +9,8 @@ function subject(code, options = {}) {
     plugins: ['.'],
     jsdocSpaces: 1,
     jsdocPrintWidth: 80,
-    ...options
-  });
+    ...options,
+  })
 }
 
 test('JS code should be formatted as usuall', () => {
@@ -286,9 +286,12 @@ test('Should add parentheses to union type if option set to true', () => {
   const options = {
     jsdocUnionTypeParentheses: true,
   }
-  const Result1 = subject(`/**
+  const Result1 = subject(
+    `/**
  * @param {Number|String} test Test param
- */`, options)
+ */`,
+    options
+  )
   const Expected1 = `/**
  * @param {(Number|String)} test Test param
  */
@@ -299,14 +302,17 @@ test('Should add parentheses to union type if option set to true', () => {
 
 test('Should align vertically param|property|return|yields|throws if option set to true', () => {
   const options = {
-    jsdocVerticalAlignment: true
+    jsdocVerticalAlignment: true,
   }
-  const Result1 = subject(`/**
+  const Result1 = subject(
+    `/**
  * @property {Object} unalginedProp unaligned property descriptin
  * @param {String} unalginedParam unaligned param description
  * @yields {Number} yields description
  * @returns {undefined}
- */`, options)
+ */`,
+    options
+  )
   const Expected1 = `/**
  * @property {Object}    unalginedProp  Unaligned property descriptin
  * @param    {String}    unalginedParam Unaligned param description
@@ -315,11 +321,14 @@ test('Should align vertically param|property|return|yields|throws if option set 
  */
 `
 
-  const Result2 = subject(`/**
+  const Result2 = subject(
+    `/**
  * @throws {CustomExceptio} unaligned throws description
  * @yields {Number} yields description
  * @returns {String} unaligned returns description
- */`, options)
+ */`,
+    options
+  )
   const Expected2 = `/**
  * @throws {CustomExceptio} Unaligned throws description
  * @yields {Number}         Yields description
@@ -334,7 +343,7 @@ test('Should align vertically param|property|return|yields|throws if option set 
 test('Should align vertically param|property|return|yields|throws if option set to true, and amount of spaces is different than default', () => {
   const options1 = {
     jsdocVerticalAlignment: true,
-    jsdocSpaces: 2
+    jsdocSpaces: 2,
   }
   const unformattedJsdoc = `/**
  * @property {Object} unalginedProp unaligned property descriptin
@@ -355,15 +364,18 @@ test('Should align vertically param|property|return|yields|throws if option set 
 
   const options2 = {
     jsdocVerticalAlignment: true,
-    jsdocSpaces: 4
+    jsdocSpaces: 4,
   }
-  const Result2 = subject(`/**
+  const Result2 = subject(
+    `/**
  * @property {Object} unalginedProp unaligned property descriptin
  * @param {String} unalginedParam unaligned param description
  * @throws {CustomExceptio} unaligned throws description
  * @yields {Number} yields description
  * @returns {String} unaligned returns description
- */`, options2)
+ */`,
+    options2
+  )
   const Expected2 = `/**
  * @property    {Object}            unalginedProp     Unaligned property
  *                                                    descriptin
@@ -383,12 +395,15 @@ test('Should align vertically param|property|return|yields|throws if option set 
 
 test('Should insert proper amount of spaces based on option', () => {
   const options1 = {
-    jsdocSpaces: 2
+    jsdocSpaces: 2,
   }
-  const Result1 = subject(`/**
+  const Result1 = subject(
+    `/**
  * @param {Object} paramName param description that goes on and on and on utill it will need to be wrapped
  * @returns {Number} return description
- */`, options1)
+ */`,
+    options1
+  )
   const Expected1 = `/**
  * @param  {Object}  paramName  Param description that goes on and on and on
  *                              utill it will need to be wrapped
@@ -397,12 +412,15 @@ test('Should insert proper amount of spaces based on option', () => {
 `
 
   const options2 = {
-    jsdocSpaces: 3
+    jsdocSpaces: 3,
   }
-  const Result2 = subject(`/**
+  const Result2 = subject(
+    `/**
  * @param {Object} paramName param description that goes on and on and on utill it will need to be wrapped
  * @returns {Number} return description
- */`, options2)
+ */`,
+    options2
+  )
   const Expected2 = `/**
  * @param   {Object}   paramName   Param description that goes on and on and on
  *                                 utill it will need to be wrapped
@@ -416,42 +434,57 @@ test('Should insert proper amount of spaces based on option', () => {
 
 test('yields should work like return tag', () => {
   const options = {
-    jsdocSpaces: 3
+    jsdocSpaces: 3,
   }
-  const Result1 = subject(`/**
+  const Result1 = subject(
+    `/**
  * @yields {Number} yields description
- */`, options)
+ */`,
+    options
+  )
   const Expected1 = `/**
  * @yields   {Number}   Yields description
  */
 `
-  const Result2 = subject(`/**
+  const Result2 = subject(
+    `/**
  * @yield {Number} yields description
- */`, options)
+ */`,
+    options
+  )
   const Expected2 = `/**
  * @yields   {Number}   Yields description
  */
 `
 
-  const Result3 = subject(`/**
+  const Result3 = subject(
+    `/**
  * @yield {Number}
- */`, options)
+ */`,
+    options
+  )
   const Expected3 = `/**
  * @yields   {Number}   TODO
  */
 `
 
-  const Result4 = subject(`/**
+  const Result4 = subject(
+    `/**
  * @yield yelds description
- */`, options)
+ */`,
+    options
+  )
   const Expected4 = `/**
  * @yields   Yelds description
  */
 `
 
-  const Result5 = subject(`/**
+  const Result5 = subject(
+    `/**
  * @yield
- */`, options)
+ */`,
+    options
+  )
   const Expected5 = `/**
  */
 `
@@ -530,7 +563,8 @@ test('should keep indent on unparseable examples - if flag set to true', () => {
   const options = {
     jsdocKeepUnparseableExampleIndent: true,
   }
-  const Result1 = subject(`/**
+  const Result1 = subject(
+    `/**
  * @example
  * {
  *   testArr: [
@@ -539,7 +573,9 @@ test('should keep indent on unparseable examples - if flag set to true', () => {
  *     ...
  *   ]
  * }
- */`, options)
+ */`,
+    options
+  )
   const Expected1 = `/**
  * @example
  *   {
@@ -552,7 +588,8 @@ test('should keep indent on unparseable examples - if flag set to true', () => {
  */
 `
 
-  const Result2 = subject(`/**
+  const Result2 = subject(
+    `/**
  * @example
  * // sample call:
  * foo(bar)
@@ -568,7 +605,9 @@ test('should keep indent on unparseable examples - if flag set to true', () => {
  *   ...,
  *   bar: 5
  * }]
- */`, options)
+ */`,
+    options
+  )
   const Expected2 = `/**
  * @example
  *   // sample call:
