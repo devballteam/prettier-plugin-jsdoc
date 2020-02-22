@@ -206,11 +206,7 @@ test('Should keep defined inner types', () => {
   expect(Result5).toEqual(Expected5)
 })
 
-test.skip('Sould keep params ordering when more than 10 tags are present', () => {
-  // this is broken. seems to originate in sort. As a short investigation I've
-  // printed tags before and after sort and those are results:
-  // before = [{"title":"param","name":"test1","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test2","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test3","type":{"type":"UnionType","elements":[{"type":"NameExpression","name":"Number"},{"type":"NameExpression","name":"String"}],"name":"Number|String"}},{"title":"param","name":"test4","type":{"type":"NullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"?undefined"}},{"title":"param","name":"test5","type":{"type":"NonNullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"!undefined"}},{"title":"param","name":"test6","type":{"type":"AllLiteral","name":"*"}},{"title":"param","name":"test7","type":{"type":"NullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"?Number"}},{"title":"param","name":"test8","type":{"type":"RestType","expression":{"type":"NameExpression","name":"Number"},"name":"...Number"}},{"title":"param","name":"test9","type":{"type":"NonNullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"!Number"}},{"title":"return","type":{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Promise"},"applications":[{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Object"},"applications":[{"type":"NameExpression","name":"string"},{"type":"UnionType","elements":[{"type":"NameExpression","name":"number"},{"type":"UndefinedLiteral"}]}]}],"name":"Promise.<Object.<string, number|undefined>>"}},{"title":"description"}]
-  // after = [{"title":"description"},{"title":"param","name":"test1","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test3","type":{"type":"UnionType","elements":[{"type":"NameExpression","name":"Number"},{"type":"NameExpression","name":"String"}],"name":"Number|String"}},{"title":"param","name":"test4","type":{"type":"NullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"?undefined"}},{"title":"param","name":"test5","type":{"type":"NonNullableType","expression":{"type":"UndefinedLiteral"},"prefix":true,"name":"!undefined"}},{"title":"param","name":"test2","type":{"type":"NameExpression","name":"Number"}},{"title":"param","name":"test7","type":{"type":"NullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"?Number"}},{"title":"param","name":"test8","type":{"type":"RestType","expression":{"type":"NameExpression","name":"Number"},"name":"...Number"}},{"title":"param","name":"test9","type":{"type":"NonNullableType","expression":{"type":"NameExpression","name":"Number"},"prefix":true,"name":"!Number"}},{"title":"param","name":"test6","type":{"type":"AllLiteral","name":"*"}},{"title":"return","type":{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Promise"},"applications":[{"type":"TypeApplication","expression":{"type":"NameExpression","name":"Object"},"applications":[{"type":"NameExpression","name":"string"},{"type":"UnionType","elements":[{"type":"NameExpression","name":"number"},{"type":"UndefinedLiteral"}]}]}],"name":"Promise.<Object.<string, number|undefined>>"}}]
+test('Sould keep params ordering when more than 10 tags are present', () => {
   const Result1 = subject(`/**
  * description
  * @param {Number} test1 Test param
@@ -222,6 +218,8 @@ test.skip('Sould keep params ordering when more than 10 tags are present', () =>
  * @param {?Number} test7 Test param
  * @param {...Number} test8 Test param
  * @param {!Number} test9 Test param
+ * @param {String} test10 Test param
+ * @param {Array} test11 Test param
  * @return {Promise<Object<string, number|undefined>>} test return
  */`)
   const Expected1 = `/**
@@ -236,6 +234,8 @@ test.skip('Sould keep params ordering when more than 10 tags are present', () =>
  * @param {?Number} test7 Test param
  * @param {...Number} test8 Test param
  * @param {!Number} test9 Test param
+ * @param {String} test10 Test param
+ * @param {Array} test11 Test param
  * @return {Promise.<Object.<string, number|undefined>>} Test return
  */
 `

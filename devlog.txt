@@ -262,3 +262,23 @@ zająć się tematami wypisanymi w README.
 czw, 30 sty 2020, 15:53:28 CET
 
 Mergowałem PR.  Dodałem prettiera do tego projektu.
+
+sob, 22 lut 2020, 18:03:20 CET
+
+Wreszcie znalazłem chwilę na dokończenie kilku spraw.  Trzeba naprawić
+sortowanie, wydać pierwszą wersję i wrzucić link do repo w starym
+wątku Prettiera na httsp://github.com.
+
+sob, 22 lut 2020, 19:30:23 CET
+
+Dziwne.  Zacząłem przygotowywać kod, przykłady i testy pod kątem
+znalezienia błędów w sortowaniu ale wygląda na to, że "u mnie działa".
+Zobaczę jeszcze dokładnie przykład jaki zostawił mi Wiktor, ale
+wygląda na to, że problem nie leży po stronie tego kodu.
+
+sob, 22 lut 2020, 19:34:14 CET
+
+Nie jestem w stanie uzyskać takiego samego błędnego rezultatu jaki
+miał Wiktor.  Zrobię commita z działającym testem na kolejność tagów.
+Dam też znać Wiktorowi żeby sprawdził u siebie czemu ten test nie
+przechodzi.  To musi być coś nie związanego z kodem.

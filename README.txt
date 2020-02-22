@@ -39,6 +39,5 @@ LINKS
 
 TODO
 
-        Investigate sorting of over 10 tags - failing test in ./tests/main.js:209
         Release first version
         Mention plugin in https://github.com/prettier/prettier/issues/5659
