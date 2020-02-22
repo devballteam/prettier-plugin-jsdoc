@@ -36,8 +36,3 @@ LINKS
 
         Prettier : https://prettier.io
         JSDoc    : https://jsdoc.app
-
-TODO
-
-        Release first version
-        Mention plugin in https://github.com/prettier/prettier/issues/5659
