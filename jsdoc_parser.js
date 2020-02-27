@@ -305,6 +305,7 @@ module.exports = {
       default: [
         {
           value: [
+            'async',
             'private',
             'global',
             'class',

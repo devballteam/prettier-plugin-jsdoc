@@ -54,6 +54,7 @@ test('Should format regular jsDoc', () => {
 * @arg {Number|Null} [optionalNumber]
 * @private
 *@memberof test
+@async
 * @examples
 *   var one = 5
 *   var two = 10
@@ -64,6 +65,7 @@ const testFunction = (text, defaultValue, optionalNumber) => true
 `)
 
   const expected = `/**
+ * @async
  * @private
  * @memberof test
  * @description Function example description that was wrapped by hand so it have
