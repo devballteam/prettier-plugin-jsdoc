@@ -1,10 +1,14 @@
+
 PRETTIER PLUGIN JSDOC
 
-        Prettire plugin that extends default "babel-flow" parser with
+        This is for of original repository: https://gitlab.com/gumen/prettier-plugin-jsdoc
+        with changed parser to have possibility to use it with TypeScript.
+
+        Prettire plugin that extends "typescript" parser with
         parser for JSDoc comments.
 
         Author      : @gumen
-        Contributor : @VectorW
+        Contributor : @VectorW, @mbogatzki
 
 INSTALLATION
 

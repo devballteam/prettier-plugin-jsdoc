@@ -1,6 +1,6 @@
 const doctrine = require('doctrine')
 const prettier = require('prettier')
-const babelFlow = require('prettier/parser-babylon').parsers['babel-flow']
+const typescriptParser = require('prettier/parser-typescript').parsers['typescript']
 
 const tagSynonyms = {
   // One TAG TYPE can have different titles called SYNONYMS.  We want
@@ -107,7 +107,7 @@ function formatDescription(text, insertDot) {
  * {@link https://prettier.io/docs/en/api.html#custom-parser-api}
  */
 function jsdocParser(text, parsers, options) {
-  const ast = parsers['babel-flow'](text)
+  const ast = parsers['typescript'](text)
 
   // Options
   const gap = ' '.repeat(options.jsdocSpaces)
@@ -126,7 +126,7 @@ function jsdocParser(text, parsers, options) {
 
   ast.comments.forEach(comment => {
     // Parse only comment blocks
-    if (comment.type !== 'CommentBlock') return
+    if (comment.type !== 'Block') return
 
     const commentString = `/*${comment.value}*/`
 
@@ -281,7 +281,7 @@ module.exports = {
     },
   ],
   parsers: {
-    'jsdoc-parser': Object.assign({}, babelFlow, { parse: jsdocParser }),
+    'jsdoc-parser': Object.assign({}, typescriptParser, { parse: jsdocParser }),
   },
   // How to define options: https://github.com/prettier/prettier/blob/master/src/cli/constant.js#L16
   // Issue with string type: https://github.com/prettier/prettier/issues/6151
